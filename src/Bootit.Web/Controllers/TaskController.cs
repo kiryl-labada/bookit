@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Bootit.Web.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class TaskController : ControllerBase
     {
         private readonly BookingContext _context;

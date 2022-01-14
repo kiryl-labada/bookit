@@ -1,4 +1,5 @@
 using Bootit.Web.Data;
+using Bootit.Web.GraphQl;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -35,11 +36,20 @@ namespace Bootit.Web
                     sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorCodesToAdd: null);
                 }));
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Bootit.Web", Version = "v1" });
             });
+
+            services.AddHttpClient();
+            services.AddHttpContextAccessor();
+
+            // Add graphql
+            services.AddScoped<GraphQlContext>()
+                .AddEpamGraphQLSchema<GraphQlQuery, GraphQlMutation, GraphQlContext>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
