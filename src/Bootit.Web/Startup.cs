@@ -47,6 +47,11 @@ namespace Bootit.Web
             services.AddHttpClient();
             services.AddHttpContextAccessor();
 
+            Setup(services);
+        }
+
+        public static void Setup(IServiceCollection services)
+        {
             // Add graphql
             services.AddScoped<GraphQlContext>()
                 .AddEpamGraphQLSchema<GraphQlQuery, GraphQlMutation, GraphQlContext>();

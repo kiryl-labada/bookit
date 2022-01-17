@@ -15,6 +15,7 @@ namespace Bootit.Web.Controllers
 {
     [Produces("application/json")]
     [Route("api/graphql")]
+    [ApiExplorerSettings(IgnoreApi = false, GroupName = nameof(GraphQlController))]
     public class GraphQlController : Controller
     {
         private readonly IServiceProvider _serviceProvider;
@@ -56,7 +57,7 @@ namespace Bootit.Web.Controllers
                 });
             }
 
-            return new JsonResult(new { result.Data, Errors = result.Errors?.Select(e => new { e.Path, e.Locations, e.Message }).ToArray() });
+            return new { result.Data, Errors = result.Errors?.Select(e => new { e.Path, e.Locations, e.Message }).ToArray() };
         }
 
         private static Dictionary<string, object> Convert(Dictionary<string, object> variables)

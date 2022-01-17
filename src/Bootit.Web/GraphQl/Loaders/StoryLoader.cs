@@ -15,7 +15,7 @@ namespace Bootit.Web.GraphQl.Loaders
         protected override void OnConfigure()
         {
             Field(x => x.Id).Filterable();
-            Field(x => x.Name).Editable().Filterable();
+            Field(x => x.Name).Editable().Filterable().Sortable();
             Field("tasks")
                 .FromLoader<TaskItemLoader, TaskItem>((story, taskItem) => story.Id == taskItem.StoryId)
                 .AsConnection();
