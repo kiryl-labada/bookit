@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bootit.Web", "Bootit.Web\Bootit.Web.csproj", "{408D7617-D103-411C-A27C-DED2715F447E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bookit.Web", "Bookit.Web\Bookit.Web.csproj", "{408D7617-D103-411C-A27C-DED2715F447E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
