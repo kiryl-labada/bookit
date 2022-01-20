@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.5.7",
     "@epam/assets": "^4.5.2",
     "@epam/loveship": "^4.5.2",
     "@epam/uui": "^4.5.2",
     "@epam/uui-components": "^4.5.2",
+    "@epam/uui-db": "^4.5.3",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -16,7 +18,9 @@
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/react-router-dom": "5.1.7",
+    "apollo-client": "^2.6.10",
     "dart-sass": "1.25.0",
+    "graphql": "^16.2.0",
     "history": "4.10.1",
     "node-sass": "npm:sass",
     "react": "^17.0.2",
@@ -54,5 +58,6 @@
     "node-sass": "npm:sass",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0"
-  }
+  },
+  "proxy": "https://localhost:44361"
 }
