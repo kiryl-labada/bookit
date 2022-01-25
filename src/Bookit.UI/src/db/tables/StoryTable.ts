@@ -6,7 +6,7 @@ export const StoryTable = new DbTable<Story, number, BookingDbTables>({
     tableName: 'stories',
     typeName: 'Story',
     fields: {
-        id: { isGenerated: false },
+        id: { isGenerated: true },
         __typename: { isClientOnly: true },
     },
     primaryKey: 'id',
