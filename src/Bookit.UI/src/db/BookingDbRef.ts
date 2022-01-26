@@ -1,10 +1,12 @@
-import { DbRef, flattenResponse, DbPatch, useDbRef } from "@epam/uui-db";
+import { DbRef, flattenResponse, DbPatch, useDbRef, DbSaveResponse } from '@epam/uui-db';
 import { DocumentNode } from 'graphql';
 import { print } from 'graphql/language/printer';
 import { FetchResult } from '@apollo/client';
 import { addTypenameToDocument } from '@apollo/client/utilities';
-import { blankBookingDb, BookingDb, BookingDbTables } from "./BookingDb";
+import { blankBookingDb, BookingDb, BookingDbTables } from './BookingDb';
 import { svc } from '../services';
+import { patchMutation } from 'api';
+import { bindActionSet, bookingActions, BookingActions } from './actions';
 
 export interface FetchState {
     isLoading: boolean;
@@ -14,8 +16,11 @@ export interface FetchState {
 }
 
 export class BookingDbRef extends DbRef<BookingDbTables, BookingDb> {
+    public readonly actions: BookingActions;
+
     constructor() {
         super(blankBookingDb);
+        this.actions = bindActionSet(this, bookingActions);
     }
 
     private fetchCache: Map<DocumentNode, Map<string, FetchState>> = new Map();
@@ -75,6 +80,14 @@ export class BookingDbRef extends DbRef<BookingDbTables, BookingDb> {
         const flatten = flattenResponse(result, blankBookingDb.tables);
         this.commitFetch(flatten);
         return result;
+    }
+
+    protected savePatch(patch: DbPatch<BookingDbTables>): Promise<DbSaveResponse<BookingDbTables>> {
+        const document = print(addTypenameToDocument(patchMutation));
+        return svc.api.gql.query({
+            query: document, 
+            variables: { payload: patch },
+        }).then((r) => r.data);
     }
 }
 

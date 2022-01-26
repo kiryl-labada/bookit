@@ -80,11 +80,17 @@ const StoryComponentImpl: React.FC<{ dbRef: BookingDbRef }> = (props) => {
         }, {
             key: 'name',
             caption: 'Name',
-            render: item => <Text>{ item.name }</Text>,
+            render: item => (
+                <TextInput
+                    value={ item.name }
+                    onValueChange={ (value: string) => props.dbRef.actions.updateStory({ id: item.id, name: value }) }
+                    mode='inline'
+                 />
+            ),
             isSortable: true,
             grow: 0, minWidth: 300,
         }
-    ], []);
+    ], [props.dbRef]);
 
     return (
         <DataTable
