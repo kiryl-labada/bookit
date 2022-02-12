@@ -12,6 +12,16 @@ export const BookingPage: React.FC<{}> = (props) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [canvas, setCanvas] = useState<fabric.Canvas>();
     const [mode, setMode] = useState<DrawMode>('pointer');
+    const [showLeftPanel, setShowLeftPanel] = useState(true);
+
+    const resizeCanvas = () => {
+        const container = containerRef.current;
+        if (container && canvas) {
+            canvas.setWidth(container.clientWidth);
+            canvas.setHeight(container.clientHeight);
+            canvas.calcOffset();
+        }
+    };
 
     useEffect(() => {
         const c = new fabric.Canvas(canvasRef.current);
@@ -36,7 +46,8 @@ export const BookingPage: React.FC<{}> = (props) => {
         const resizeCanvas = function() {
             const container = containerRef.current;
             if (container) {
-                console.log('width', container.clientWidth);
+                const { clientWidth, offsetWidth, scrollWidth } = container;
+                console.log('width', { clientWidth, offsetWidth, scrollWidth });
 
                 c.setWidth(container.clientWidth);
                 c.setHeight(container.clientHeight);
@@ -49,7 +60,20 @@ export const BookingPage: React.FC<{}> = (props) => {
         return () => {
             window.removeEventListener('resize', resizeCanvas, false);
         };
-    }, [containerRef, canvas])
+    }, [containerRef, canvas]);
+
+    useEffect(() => {
+        let n = 1;
+        const step = 250;
+
+        const intervalID = setInterval(() => {
+            resizeCanvas();
+
+            if (++n * step > 1000) {
+                clearInterval(intervalID)
+            }
+        }, step);
+    }, [showLeftPanel]);
 
     useEffect(() => {
         if (!canvas) {
@@ -74,7 +98,7 @@ export const BookingPage: React.FC<{}> = (props) => {
 
     return (
         <div style={ { display: 'flex', flex: '1 1 auto', position: 'absolute', width: '100%', height: '100%' } }>
-            <div style={ { flexBasis: 250, flexShrink: 0 } } >
+            <div style={ { flexBasis: 250, flexShrink: 0, marginLeft: !showLeftPanel ? -250 : undefined } } className={ css.sidebar } >
                 <Panel background='night50' rawProps={ { style: { height: '100%' } } } >
                     { renderButton('pointer') }
                     { renderButton('rect') }
@@ -85,9 +109,10 @@ export const BookingPage: React.FC<{}> = (props) => {
             <div style={ { flexGrow: 1, overflow: 'hidden' } } ref={containerRef} >
                 <canvas ref={canvasRef} />
             </div>
-            <FlexCell width={ 250 } shrink={ 0 } >
+            <FlexCell width={ 250 } shrink={ 0 } cx={ css.sidebar } >
                 <Panel background='night50' rawProps={ { style: { height: '100%' } } } >
-                    <Text>ajkds</Text>
+                    <Button caption='Hide' onClick={ () => setShowLeftPanel(false) } />
+                    <Button caption='Show' onClick={ () => setShowLeftPanel(true) } />
                 </Panel>
             </FlexCell>
         </div>
