@@ -1,7 +1,7 @@
 import { fabric } from "fabric";
 
-function isClose(point1: fabric.Point, point2: fabric.Point) {
-    return point1.distanceFrom(point2) < 10;
+function isClose(canvas: fabric.Canvas, point1: fabric.Point, point2: fabric.Point) {
+    return (canvas.getZoom() * point1.distanceFrom(point2)) < 10;
 }
 
 function createPolygon(points: fabric.Point[]) {
@@ -27,7 +27,7 @@ export function drawPolygon(canvas: fabric.Canvas) {
         this.selection = false;
         const point = opt.absolutePointer;
         
-        if (points.length > 2 && isClose(point, points[0])) {
+        if (points.length > 2 && isClose(canvas, point, points[0])) {
             this.selection = true;
             const polygon = createPolygon(points);
             canvas.add(polygon);
