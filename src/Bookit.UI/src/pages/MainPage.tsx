@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import css from './MainPage.module.scss';
 import { Panel, RichTextView, IconContainer, PickerInput } from '@epam/loveship';
 import { useArrayDataSource } from '@epam/uui';
-import { ReactComponent as UuiPromoImage } from '../icons/uui-promo-image.svg';
+import { ReactComponent as UuiPromoImage } from '../assets/icons/uui-promo-image.svg';
 import { StoryComponent } from '../components';
 
 

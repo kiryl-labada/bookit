@@ -3,6 +3,7 @@ import { Panel, FlexCell, Button } from "@epam/loveship";
 import { useEffect, useState } from "react";
 import css from './Booking.module.scss';
 import { DrawMode, MapCanvas } from "components";
+import plan from './../../assets/imgs/floor-plan.jpg';
 
 
 export const BookingPage: React.FC<{}> = (props) => {
@@ -40,6 +41,7 @@ export const BookingPage: React.FC<{}> = (props) => {
                     forceResize={ forceResize } 
                     afterResize={ () => setForceResize(false) } 
                     mode={ mode } 
+                    background={ plan }
                 />
             </div>
             <FlexCell width={ 250 } shrink={ 0 } cx={ css.sidebar } >

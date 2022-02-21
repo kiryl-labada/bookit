@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useRef, useEffect, useState } from 'react';
 import { fabric } from 'fabric';
-import { drawPolygon, drawRectangle, enableZoom, moveCanvas } from '../../common';
+import { Bounds, drawPolygon, drawRectangle, enableZoom, moveCanvas } from '../../common';
 
 export type DrawMode = 'pointer' | 'rect' | 'move' | 'polygon';
 
@@ -9,6 +9,7 @@ interface MapCanvasProps {
     forceResize?: boolean;
     afterResize?: () => void;
     mode: DrawMode;
+    background: string | null;
 }
 
 function calculateParentSize(canvas: HTMLCanvasElement) {
@@ -34,9 +35,10 @@ function debounce(f: any, ms: number) {
     };
 }
 
-export const MapCanvas: React.FC<MapCanvasProps> = ({ forceResize, afterResize, mode }) => {
+export const MapCanvas: React.FC<MapCanvasProps> = ({ forceResize, afterResize, mode, background }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [canvas, setCanvas] = useState<fabric.Canvas>();
+    const [bounds, setBounds] = useState<Bounds>();
 
     const resizeCanvas = () => {
         if (canvasRef.current && canvas) {
@@ -51,6 +53,28 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({ forceResize, afterResize, 
         const c = new fabric.Canvas(canvasRef.current);
         setCanvas(c);
     }, []);
+
+    useEffect(() => {
+        if (!canvas) return;
+
+        if (background) {
+            canvas.setBackgroundImage(background, () => {
+                if (canvas.backgroundImage instanceof fabric.Image) {
+                    const { width, height } = canvas.backgroundImage;
+
+                    setBounds({
+                        offsetX: width! * 0.8,
+                        offsetY: height! * 0.8,
+                        width: width!,
+                        height: height!,
+                    });
+                }
+            });
+        } else {
+            canvas.backgroundImage = undefined;
+            canvas.renderAll();
+        }
+    }, [background, canvas]);
 
     useEffect(() => {
         if (!canvas) return;
@@ -82,14 +106,14 @@ export const MapCanvas: React.FC<MapCanvasProps> = ({ forceResize, afterResize, 
         }
 
         if (mode === 'move') {
-            return moveCanvas(canvas);
+            return moveCanvas(canvas, bounds);
         }
 
         if (mode === 'polygon') {
             return drawPolygon(canvas);
         }
 
-    }, [canvas, mode]);
+    }, [canvas, mode, bounds]);
 
     return <canvas ref={canvasRef} />;
 }

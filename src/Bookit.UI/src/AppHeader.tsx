@@ -1,5 +1,5 @@
 import * as React from "react";
-import logo from "./icons/logo.svg";
+import logo from "./assets/icons/logo.svg";
 import { MainMenu, MainMenuButton, FlexSpacer, MainMenuCustomElement, DropdownMenuButton, Dropdown, MainMenuAvatar, DropdownMenuBody, DropdownMenuSplitter } from "@epam/loveship";
 import css from './AppHeader.module.scss';
 
