@@ -1,7 +1,7 @@
 import { UuiContexts, CommonContexts as UuiCommonContext, ApiExtensions } from '@epam/uui';
 import { IClientIdsMap } from '@epam/uui-db';
-import { getApi, GraphQLRequest } from 'api';
-import { BookingDbRef } from 'db';
+import { getApi, GraphQLRequest } from './api';
+import { BookingDbRef } from './db';
 
 const tApi = getApi({} as any);
 export type Api = typeof tApi;

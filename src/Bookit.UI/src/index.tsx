@@ -17,6 +17,7 @@ import { BookingDbRef } from './db';
 
 const history = createBrowserHistory();
 const dbRef = new BookingDbRef();
+Object.assign(window, { dbRef });
 
 const UuiEnhancedApp = () => (
     <ContextProvider

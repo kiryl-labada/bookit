@@ -4,8 +4,8 @@ import { Route } from 'react-router-dom'
 import { useDbView } from '@epam/uui-db';
 import { AppHeader } from './AppHeader'
 import css from './App.module.scss';
-import { CatalogPage } from 'pages/catalog/Catalog';
-import { BookingPage } from 'pages/booking/Booking';
+import { CatalogPage } from './pages/catalog/Catalog';
+import { BookingPage } from './pages/booking/Booking';
 
 export const App = () => {
     useDbView((db) => db, {});
