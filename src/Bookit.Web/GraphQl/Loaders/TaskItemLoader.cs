@@ -19,7 +19,7 @@ namespace Bookit.Web.GraphQl.Loaders
             Field(x => x.StoryId).Filterable();
 
             Field("story")
-                .FromLoader<StoryLoader, Story>((taskItem, story) => taskItem.StoryId == story.Id, reverseNavigationProperty: lt => lt.Story)
+                .FromLoader<StoryLoader, Story>((taskItem, story) => taskItem.StoryId == story.Id, reverseNavigationProperty: lt => lt.Story!)
                 .SingleOrDefault();
         }
     }

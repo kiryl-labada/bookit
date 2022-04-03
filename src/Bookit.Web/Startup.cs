@@ -59,7 +59,7 @@ namespace Bookit.Web
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>()!.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<BookingContext>();
                 context.Database.Migrate();

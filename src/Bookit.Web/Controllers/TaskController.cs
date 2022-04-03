@@ -31,7 +31,7 @@ namespace Bookit.Web.Controllers
 
             foreach (var story in stories)
             {
-                foreach (var task in story.TaskItems)
+                foreach (var task in story.TaskItems!)
                 {
                     task.Story = null;
                 }

@@ -1,5 +1,6 @@
 ﻿using Bookit.Web.Data;
 using Microsoft.AspNetCore.Http;
+using System;
 
 namespace Bookit.Web.GraphQl
 {
@@ -7,7 +8,7 @@ namespace Bookit.Web.GraphQl
     {
         public GraphQlContext(IHttpContextAccessor httpContextAccessor, BookingContext bookingContext)
         {
-            HttpContext = httpContextAccessor?.HttpContext;
+            HttpContext = httpContextAccessor?.HttpContext ?? throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
             BookingContext = bookingContext;
         }
 

@@ -60,12 +60,12 @@ namespace Bookit.Web.Controllers
             return new { result.Data, Errors = result.Errors?.Select(e => new { e.Path, e.Locations, e.Message }).ToArray() };
         }
 
-        private static Dictionary<string, object> Convert(Dictionary<string, object> variables)
+        private static Dictionary<string, object?>? Convert(Dictionary<string, object?>? variables)
         {
             return variables?.ToDictionary(kv => kv.Key, kv => kv.Value is JToken jToken ? ToObject(jToken) : kv.Value);
         }
 
-        private static object ToObject(JToken token)
+        private static object? ToObject(JToken token)
         {
             switch (token.Type)
             {
