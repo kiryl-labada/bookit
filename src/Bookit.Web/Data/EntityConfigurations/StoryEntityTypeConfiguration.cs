@@ -2,19 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Bookit.Web.Data.EntityConfigurations
+namespace Bookit.Web.Data.EntityConfigurations;
+
+public class StoryEntityTypeConfiguration : IEntityTypeConfiguration<Story>
 {
-    public class StoryEntityTypeConfiguration : IEntityTypeConfiguration<Story>
+    public void Configure(EntityTypeBuilder<Story> builder)
     {
-        public void Configure(EntityTypeBuilder<Story> builder)
-        {
-            builder.HasKey(x => x.Id);
+        builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.Name).IsRequired();
+        builder.Property(x => x.Name).IsRequired();
 
-            builder.HasMany(x => x.TaskItems)
-                .WithOne(x => x.Story)
-                .HasForeignKey(x => x.StoryId);
-        }
+        builder.HasMany(x => x.TaskItems)
+            .WithOne(x => x.Story)
+            .HasForeignKey(x => x.StoryId);
     }
 }

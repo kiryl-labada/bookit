@@ -4,23 +4,22 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Bookit.Web.GraphQl.Loaders
+namespace Bookit.Web.GraphQl.Loaders;
+
+public class TaskItemLoader : MutableLoader<TaskItem, int, GraphQlContext>
 {
-    public class TaskItemLoader : MutableLoader<TaskItem, int, GraphQlContext>
+    protected override Expression<Func<TaskItem, int>> IdExpression => task => task.Id;
+    public override bool IsFakeId(int id) => id < 0;
+    protected override IQueryable<TaskItem> GetBaseQuery(GraphQlContext context) => context.BookingContext.TaskItems;
+
+    protected override void OnConfigure()
     {
-        protected override Expression<Func<TaskItem, int>> IdExpression => task => task.Id;
-        public override bool IsFakeId(int id) => id < 0;
-        protected override IQueryable<TaskItem> GetBaseQuery(GraphQlContext context) => context.BookingContext.TaskItems;
+        Field(x => x.Id).Filterable();
+        Field(x => x.Name).Editable().Filterable();
+        Field(x => x.StoryId).Filterable();
 
-        protected override void OnConfigure()
-        {
-            Field(x => x.Id).Filterable();
-            Field(x => x.Name).Editable().Filterable();
-            Field(x => x.StoryId).Filterable();
-
-            Field("story")
-                .FromLoader<StoryLoader, Story>((taskItem, story) => taskItem.StoryId == story.Id, reverseNavigationProperty: lt => lt.Story!)
-                .SingleOrDefault();
-        }
+        Field("story")
+            .FromLoader<StoryLoader, Story>((taskItem, story) => taskItem.StoryId == story.Id, reverseNavigationProperty: lt => lt.Story!)
+            .SingleOrDefault();
     }
 }

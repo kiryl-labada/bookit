@@ -8,43 +8,42 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bookit.Web.Controllers
+namespace Bookit.Web.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class TaskController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class TaskController : ControllerBase
+    private readonly BookingContext _context;
+
+    public TaskController(BookingContext context)
     {
-        private readonly BookingContext _context;
+        _context = context;
+    }
 
-        public TaskController(BookingContext context)
+    [HttpGet]
+    public async Task<IEnumerable<Story>> Get()
+    {
+        var stories = await _context.Stories
+            .AsNoTracking()
+            .Include(x => x.TaskItems)
+            .ToListAsync();
+
+        foreach (var story in stories)
         {
-            _context = context;
-        }
-
-        [HttpGet]
-        public async Task<IEnumerable<Story>> Get()
-        {
-            var stories = await _context.Stories
-                .AsNoTracking()
-                .Include(x => x.TaskItems)
-                .ToListAsync();
-
-            foreach (var story in stories)
+            foreach (var task in story.TaskItems!)
             {
-                foreach (var task in story.TaskItems!)
-                {
-                    task.Story = null;
-                }
+                task.Story = null;
             }
-
-            return stories;
         }
 
-        [HttpPost]
-        public async Task Post(Story story)
-        {
-            _context.Stories.Add(story);
-            await _context.SaveChangesAsync();
-        }
+        return stories;
+    }
+
+    [HttpPost]
+    public async Task Post(Story story)
+    {
+        _context.Stories.Add(story);
+        await _context.SaveChangesAsync();
     }
 }

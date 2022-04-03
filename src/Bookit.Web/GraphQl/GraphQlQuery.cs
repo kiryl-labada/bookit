@@ -7,14 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bookit.Web.GraphQl
+namespace Bookit.Web.GraphQl;
+
+public class GraphQlQuery : Query<GraphQlContext>
 {
-    public class GraphQlQuery : Query<GraphQlContext>
+    protected override void OnConfigure()
     {
-        protected override void OnConfigure()
-        {
-            Connection<StoryLoader>("stories");
-            Connection<TaskItemLoader>("tasks");
-        }
+        Connection<StoryLoader>("stories");
+        Connection<TaskItemLoader>("tasks");
+        Connection<MapObjectLoader>("mapObjects");
+        Connection<MapObjectViewLoader>("mapObjectViews");
     }
 }
