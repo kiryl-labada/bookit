@@ -2,26 +2,32 @@
 using Bookit.Web.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Bookit.Web.Data
+namespace Bookit.Web.Data;
+
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+public class BookingContext : DbContext
 {
-    public class BookingContext : DbContext
+    protected string Schema => "bookit";
+
+    public DbSet<TaskItem> TaskItems { get; set; }
+    public DbSet<Story> Stories { get; set; }
+    public DbSet<MapObject> MapObjects { get; set; }
+    public DbSet<MapObjectView> MapObjectViews { get; set; }
+
+    public BookingContext(DbContextOptions<BookingContext> options) : base(options)
     {
-        protected string Schema => "bookit";
+    }
 
-        public DbSet<TaskItem> TaskItems { get; set; }
-        public DbSet<Story> Stories { get; set; }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.HasDefaultSchema(Schema);
+        base.OnModelCreating(modelBuilder);
 
-        public BookingContext(DbContextOptions<BookingContext> options) : base(options)
-        {
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.HasDefaultSchema(Schema);
-            base.OnModelCreating(modelBuilder);
-
-            modelBuilder.ApplyConfiguration(new StoryEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new TaskItemEntityTypConfiguration());
-        }
+        modelBuilder.ApplyConfiguration(new StoryEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new TaskItemEntityTypConfiguration());
+        modelBuilder.ApplyConfiguration(new MapObjectEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new MapObjectViewEntityTypeConfiguration());
     }
 }
+
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.

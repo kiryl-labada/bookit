@@ -3,8 +3,8 @@
     public class TaskItem
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public int StoryId { get; set; }
-        public Story Story { get; set; }
+        public Story? Story { get; set; }
     }
 }
