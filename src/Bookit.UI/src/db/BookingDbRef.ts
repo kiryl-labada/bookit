@@ -7,6 +7,7 @@ import { blankBookingDb, BookingDb, BookingDbTables } from './BookingDb';
 import { svc } from '../services';
 import { patchMutation } from '../api';
 import { bindActionSet, bookingActions, BookingActions } from './actions';
+import { getMapQuery } from '../api/queries/getMap';
 
 export interface FetchState {
     isLoading: boolean;
@@ -88,6 +89,10 @@ export class BookingDbRef extends DbRef<BookingDbTables, BookingDb> {
             query: document, 
             variables: { payload: patch },
         }).then((r) => r.data);
+    }
+
+    fetchMap() {
+        return this.fetchGQL(getMapQuery, {});
     }
 }
 

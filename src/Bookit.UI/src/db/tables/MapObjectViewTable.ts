@@ -1,17 +1,16 @@
 import { DbRelationType, DbTable } from '@epam/uui-db';
 import { BookingDbTables } from '../BookingDb';
-import { MapObject } from '../models';
+import { MapObjectView } from '../models';
 
-export const MapObjectTable = new DbTable<MapObject, number, BookingDbTables>({
-    tableName: 'mapObjects',
-    typeName: 'MapObject',
+export const MapObjectViewTable = new DbTable<MapObjectView, number, BookingDbTables>({
+    tableName: 'mapObjectViews',
+    typeName: 'MapObjectView',
     fields: {
-        id: { isGenerated: true },
-        mapId: {
+        id: {
             fk: {
                 tableName: 'mapObjects',
                 relationType: DbRelationType.Association,
-            },
+            }, 
         },
         __typename: { isClientOnly: true },
     },

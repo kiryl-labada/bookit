@@ -11,14 +11,29 @@ export enum MapObjectType {
     PLACE = 'PLACE',
 }
 
+export enum StateType {
+    Draft = 'Draft',
+    Published = 'Published',
+    Archived = 'Archived',
+}
+
 export interface MapObject {
     id: number;
-    parentId: number | null;
-    name: string;
+    name: string | null;
+    mapId: number | null;
+    state: StateType;
     type: MapObjectType;
-    children: MapObject[];
-    structureJson: string;
-    background: string | null;
-    modifiedAt: Date;
+    createdAt: Date;
+    updatedAt: Date;
+    isDeleted: boolean;
     __typename?: 'MapObject';
+}
+
+export interface MapObjectView {
+    id: number;
+    structure: string | null;
+    backgroundUrl: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+    __typename?: 'MapObjectView';
 }

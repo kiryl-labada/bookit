@@ -21,6 +21,9 @@ public class MapObjectLoader : MutableLoader<MapObject, int, GraphQlContext>
     {
         Field(x => x.Id);
         Field(x => x.Name).Editable();
+        Field(x => x.MapId);
+        Field(x => x.State);
+        Field(x => x.Type);
         Field(x => x.CreatedAt);
         Field(x => x.UpdatedAt);
         Field(x => x.IsDeleted).Editable().Filterable();

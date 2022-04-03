@@ -1,12 +1,12 @@
 import { fabric } from 'fabric';
 import { BehaviorSubject, Unsubscribable, fromEventPattern } from 'rxjs';
 import { Bounds } from '../../common/canvas/MoveCanvasPlugin';
-import { BookingDb, BookingDbRef, MapObject, MapObjectType } from '../../db';
+import { BookingDb, BookingDbRef, MapObject, MapObjectType, MapObjectView } from '../../db';
 import { MapPlugin } from '../../common';
 
 interface MapObjectState {
-    current: MapObject;
-    prev?: MapObject;
+    current: MapObjectVM;
+    prev?: MapObjectVM;
     view: fabric.Object;
 }
 
@@ -22,9 +22,9 @@ export class MapCanvasController {
     private canvas: fabric.Canvas;
     private mapId: number;
 
-    private addQueue: MapObject[] = [];
-    private removeQueue: MapObject[] = [];
-    private updateQueue: MapObject[] = [];
+    private addQueue: MapObjectVM[] = [];
+    private removeQueue: MapObjectVM[] = [];
+    private updateQueue: MapObjectVM[] = [];
 
     private subsriptions: Unsubscribable[] = [];
 
@@ -118,7 +118,7 @@ export class MapCanvasController {
                 return;
             }
 
-            if (savedState.current.modifiedAt !== item.modifiedAt) {
+            if (savedState.current.updatedAt !== item.updatedAt) {
                 this.updateQueue.push(item);
             }
         });
@@ -149,14 +149,16 @@ export class MapCanvasController {
         this.updateQueue.length = 0;
     }
 
-    mountItem(item: MapObject) {
+    mountItem(item: MapObjectVM) {
         console.log('mount', item);
         if (item.type === MapObjectType.MAP) {
             this.mapState.set(item.id, { current: item, view: null as any });
             return;
         }
 
-        fabric.util.enlivenObjects([JSON.parse(item.structureJson)], (objects: fabric.Object[]) => {
+        if (!item.structure) return;
+
+        fabric.util.enlivenObjects([JSON.parse(item.structure)], (objects: fabric.Object[]) => {
             const obj = objects[0];
             this.canvas.add(obj);
 
@@ -168,11 +170,10 @@ export class MapCanvasController {
             itemModified.subscribe((e) => {
                 console.log('item modified');
                 this.dbRef.commitFetch({
-                    mapObjects: [
+                    mapObjectViews: [
                         {
                             id: this.dbRef.idMap.clientToServer(item.id),
-                            name: new Date().toISOString(),
-                            structureJson: JSON.stringify(obj),
+                            structure: JSON.stringify(obj),
                         },
                     ],
                 });
@@ -189,25 +190,21 @@ export class MapCanvasController {
         }, undefined as any);
     }
 
-    unmountItem(item: MapObject) {
+    unmountItem(item: MapObjectVM) {
         console.log('unmount', item);
         const view = this.mapState.get(item.id)!.view;
         view && this.canvas.remove(view);
         this.mapState.delete(item.id);
     }
 
-    updateItem(item: MapObject) {
+    updateItem(item: MapObjectVM) {
         // console.log('update', item);
         const state = this.mapState.get(item.id)!;
         state.prev = state.current;
         state.current = item;
 
-        if (item.name === 'NewMapObject1') {
-            state.view.set({ width: 50 });
-        }
-
-        if (item.background) {
-            this.canvas.setBackgroundImage(item.background, () => {
+        if (item.backgroundUrl) {
+            this.canvas.setBackgroundImage(item.backgroundUrl, () => {
                 if (this.canvas.backgroundImage instanceof fabric.Image) {
                     const { width, height } = this.canvas.backgroundImage.getOriginalSize();
 
@@ -247,10 +244,30 @@ export class MapCanvasController {
     }
 }
 
+interface MapObjectVM {
+    id: MapObject['id'];
+    mapId: MapObject['mapId'];
+    type: MapObject['type'];
+    updatedAt: MapObject['updatedAt'];
+    structure: MapObjectView['structure'];
+    backgroundUrl: MapObjectView['backgroundUrl'];
+}
 
-const getMapObjects = (db: BookingDb, { mapId }: { mapId: number }): MapObject[] => {
+const getMapObjects = (db: BookingDb, { mapId }: { mapId: number }): MapObjectVM[] => {
     console.log('mapId', mapId);
+    
     const map = db.mapObjects.byId(mapId);
-    const mapObjects = db.mapObjects.find({ parentId: mapId }).toArray();
-    return [map, ...mapObjects];
+    const mapObjects = db.mapObjects.find({ mapId }).toArray();
+
+    return [map, ...mapObjects].map((i) => {
+        const { backgroundUrl, structure } = db.mapObjectViews.byId(i.id);
+        return {
+            id: i.id,
+            mapId: i.mapId,
+            type: i.type,
+            updatedAt: i.updatedAt,
+            backgroundUrl,
+            structure,
+        };
+    });
 };
