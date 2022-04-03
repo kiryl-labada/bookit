@@ -6,7 +6,7 @@ namespace Bookit.Web.Data.Models;
 public class MapObject
 {
     public int Id { get; set; }
-    public string Name { get; set; }
+    public string? Name { get; set; }
     public int? MapId { get; set; }
     public StateType State { get; set; }
     public MapObjectType Type { get; set; }
