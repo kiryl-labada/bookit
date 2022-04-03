@@ -11,6 +11,29 @@ export const patchMutation = gql`
                     ...storyFragment
                 }
             }
+            mapObjects {
+                id
+                payload {
+                    id
+                    name
+                    mapId
+                    state
+                    type
+                    createdAt
+                    updatedAt
+                    isDeleted
+                }
+            }
+            mapObjectViews {
+                id
+                payload {
+                    id
+                    backgroundUrl
+                    structure
+                    createdAt
+                    updatedAt
+                }
+            }
         }
     }
 

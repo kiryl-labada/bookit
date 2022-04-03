@@ -169,14 +169,7 @@ export class MapCanvasController {
 
             itemModified.subscribe((e) => {
                 console.log('item modified');
-                this.dbRef.commitFetch({
-                    mapObjectViews: [
-                        {
-                            id: this.dbRef.idMap.clientToServer(item.id),
-                            structure: JSON.stringify(obj),
-                        },
-                    ],
-                });
+                this.dbRef.actions.updateMapObjectView({ id: item.id, structure: JSON.stringify(obj) })
             });
 
             // obj.on('selected' as any, () => {
@@ -198,7 +191,7 @@ export class MapCanvasController {
     }
 
     updateItem(item: MapObjectVM) {
-        // console.log('update', item);
+        console.log('update', item);
         const state = this.mapState.get(item.id)!;
         state.prev = state.current;
         state.current = item;

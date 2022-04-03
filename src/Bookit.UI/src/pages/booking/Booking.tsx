@@ -1,6 +1,6 @@
 import { useEffect, useState, FC } from 'react';
 import { BehaviorSubject } from 'rxjs';
-import { Panel, FlexCell, Button, Text, Spinner } from '@epam/loveship';
+import { Panel, FlexCell, Button, Text, Spinner, TextInput } from '@epam/loveship';
 import css from './Booking.module.scss';
 import { BookingDb, MapObject, MapObjectType, useBookingDbRef } from '../../db';
 import { MapCanvasGeneric } from '../../components/map/MapCanvasGeneric';
@@ -73,6 +73,12 @@ export const BookingPage: FC<{}> = (props) => {
                     <Button caption='Hide' onClick={ () => setShowLeftPanel(false) } />
                     <Button caption='Show' onClick={ () => setShowLeftPanel(true) } />
                     <Text>{ selectedItem?.name }</Text>
+                    { selectedItem && (
+                        <TextInput
+                            value={ selectedItem.name || '' }
+                            onValueChange={ (value: string) => dbRef.actions.updateMapObject({ id: selectedItem.id, name: value }) }
+                        />
+                    ) }
                 </Panel>
             </FlexCell>
         </div>

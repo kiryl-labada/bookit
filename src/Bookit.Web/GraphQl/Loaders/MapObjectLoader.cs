@@ -32,4 +32,15 @@ public class MapObjectLoader : MutableLoader<MapObject, int, GraphQlContext>
                 (mapObject, mapObjectView) => mapObject.Id == mapObjectView.Id)
             .SingleOrDefault();
     }
+
+    protected override void BeforeCreate(GraphQlContext context, MapObject entity)
+    {
+        entity.CreatedAt = DateTime.UtcNow;
+        entity.UpdatedAt = DateTime.UtcNow;
+    }
+
+    protected override void BeforeUpdate(GraphQlContext context, MapObject entity)
+    {
+        entity.UpdatedAt = DateTime.UtcNow;
+    }
 }

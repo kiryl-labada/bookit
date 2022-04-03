@@ -20,9 +20,20 @@ public class MapObjectViewLoader : MutableLoader<MapObjectView, int, GraphQlCont
     protected override void OnConfigure()
     {
         Field(x => x.Id);
-        Field(x => x.Structure);
-        Field(x => x.BackgroundUrl);
+        Field(x => x.Structure).Editable();
+        Field(x => x.BackgroundUrl).Editable();
         Field(x => x.CreatedAt);
         Field(x => x.UpdatedAt);
+    }
+
+    protected override void BeforeCreate(GraphQlContext context, MapObjectView entity)
+    {
+        entity.CreatedAt = DateTime.UtcNow;
+        entity.UpdatedAt = DateTime.UtcNow;
+    }
+
+    protected override void BeforeUpdate(GraphQlContext context, MapObjectView entity)
+    {
+        entity.UpdatedAt = DateTime.UtcNow;
     }
 }

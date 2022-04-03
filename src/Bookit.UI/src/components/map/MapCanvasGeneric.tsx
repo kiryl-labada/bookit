@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, fromEvent, interval, throttle, Unsubscribable } from 'rxjs';
 import { BookingDbRef } from '../../db';
 import { MapCanvasController } from './MapCanvasController';
 import { MapPlugin } from '../../common';
@@ -20,7 +20,8 @@ interface MapCanvasGenericProps {
 export class MapCanvasGeneric extends React.Component<MapCanvasGenericProps, A> {
     private mapController: MapCanvasController | null = null;
     private htmlCanvas: HTMLCanvasElement | null = null;
-
+    private subscriptions: Unsubscribable[] = [];
+    
     render() {
         console.log('render');
         return <canvas ref={ (c) => this.setCanvas(c) } />
@@ -50,11 +51,18 @@ export class MapCanvasGeneric extends React.Component<MapCanvasGenericProps, A> 
         this.mapController?.detectChanges();
         this.mapController?.handleQueue();
         this.resize();
+
+        this.subscriptions.push(
+            fromEvent(window, 'resize')
+                .pipe(throttle(ev => interval(150)))
+                .subscribe(() => this.resize())
+        );
     }
 
     componentWillUnmount() {
         console.log('componentWillUnmount');
         this.resizeTimer && clearInterval(this.resizeTimer);
+        this.subscriptions.forEach((s) => s.unsubscribe());
     }
 
     componentDidUpdate(prevProps: MapCanvasGenericProps, prevState: A, snapshot: any) {
