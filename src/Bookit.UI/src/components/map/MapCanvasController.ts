@@ -1,5 +1,5 @@
 import { fabric } from 'fabric';
-import { BehaviorSubject, Unsubscribable } from 'rxjs';
+import { BehaviorSubject, Unsubscribable, fromEventPattern } from 'rxjs';
 import { Bounds } from '../../common/canvas/MoveCanvasPlugin';
 import { BookingDb, BookingDbRef, MapObject, MapObjectType } from '../../db';
 import { MapPlugin } from '../../common';
@@ -45,21 +45,18 @@ export class MapCanvasController {
     }
 
     private subscribe() {
-        this.canvas.on('selection:cleared', () => {
-            if (this.options.selectedItem?.value) {
-                this.options.selectedItem.next(null);
-            }
-            console.log('canvas deselect');
-        });
-
-        this.canvas.on('selection:created', () => {
+        const selectionClearedEvent = fromEventPattern((h) => this.canvas.on('selection:cleared', h), (h) => this.canvas.off('selection:cleared', h));
+        const selectionCreatedEvent = fromEventPattern((h) => this.canvas.on('selection:created', h), (h) => this.canvas.off('selection:created', h));
+        const selectionUpdatedEvent = fromEventPattern((h) => this.canvas.on('selection:updated', h), (h) => this.canvas.off('selection:updated', h));
+        
+        const s1 = selectionCreatedEvent.subscribe(() => {
             console.log('selection created');
             const activeView = this.canvas.getActiveObject();
             const state = this.findMapObjectByView(activeView);
             state && this.options.selectedItem?.next(state.current.id);
         });
 
-        this.canvas.on('selection:updated', () => {
+        const s2 = selectionUpdatedEvent.subscribe(() => {
             console.log('selection updated')
             const activeView = this.canvas.getActiveObject();
             const state = this.findMapObjectByView(activeView);
@@ -70,7 +67,14 @@ export class MapCanvasController {
             }
         });
 
-        const s1 = this.options.selectedItem?.subscribe((id) => {
+        const s3 = selectionClearedEvent.subscribe(() => {
+            if (this.options.selectedItem?.value) {
+                this.options.selectedItem.next(null);
+            }
+            console.log('canvas deselect');
+        });
+
+        const s4 = this.options.selectedItem?.subscribe((id) => {
             const view = (id && this.mapState.get(id)?.view) || null;
 
             if (view) {
@@ -80,7 +84,10 @@ export class MapCanvasController {
             }
         });
 
-        s1 && this.subsriptions.push(s1);
+        this.subsriptions.push(s1);
+        this.subsriptions.push(s2);
+        this.subsriptions.push(s3);
+        s4 && this.subsriptions.push(s4);
     }
 
     setPlugins(plugins: MapPlugin[]) {
@@ -152,8 +159,23 @@ export class MapCanvasController {
         fabric.util.enlivenObjects([JSON.parse(item.structureJson)], (objects: fabric.Object[]) => {
             const obj = objects[0];
             this.canvas.add(obj);
-            obj.on('modified', (e) => {
-                console.log('e', e);
+
+            const itemModified = fromEventPattern<fabric.IEvent<Event>>(
+                (handler) => obj.on('modified', handler),
+                (handler) => obj.off('modified', handler),
+            );
+
+            itemModified.subscribe((e) => {
+                console.log('item modified');
+                this.dbRef.commitFetch({
+                    mapObjects: [
+                        {
+                            id: this.dbRef.idMap.clientToServer(item.id),
+                            name: new Date().toISOString(),
+                            structureJson: JSON.stringify(obj),
+                        },
+                    ],
+                });
             });
 
             // obj.on('selected' as any, () => {

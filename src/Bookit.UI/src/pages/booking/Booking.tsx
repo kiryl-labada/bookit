@@ -5,7 +5,7 @@ import css from './Booking.module.scss';
 import plan from './../../assets/imgs/floor-plan.jpg';
 import { BookingDb, MapObject, MapObjectType, useBookingDbRef } from '../../db';
 import { MapCanvasGeneric } from '../../components/map/MapCanvasGeneric';
-import { DrawPolygonPlugin, MapPlugin, MoveCanvasPlugin, ZoomPlugin } from '../../common';
+import { DrawPolygonPlugin, MapPlugin, MoveCanvasPlugin, useForceUpdate, ZoomPlugin } from '../../common';
 
 const defaultMapPlugins: MapPlugin[] = [new MoveCanvasPlugin(), new ZoomPlugin()];
 
@@ -17,12 +17,14 @@ export const BookingPage: FC<{}> = (props) => {
     const [mode, setMode] = useState<DrawMode>('pointer');
     const [showLeftPanel, setShowLeftPanel] = useState(true);
     const [forceResize, setForceResize] = useState(false);
+    const forceUpdate = useForceUpdate();
     const [plugins, setPlugins] = useState<MapPlugin[]>(defaultMapPlugins);
-    const [selectedItem, setSelectedItem] = useState<MapObject | null>(null);
+    // const [selectedItem, setSelectedItem] = useState<MapObject | null>(null);
     const [selectedItemId] = useState(new BehaviorSubject<number | null>(-3));
+    const selectedItem = selectedItemId.value ? dbRef.db.mapObjects.byId(selectedItemId.value) : null;
 
     useEffect(() => {
-        const s = selectedItemId.subscribe((v) => setSelectedItem(v ? dbRef.db.mapObjects.byId(v) : null));
+        const s = selectedItemId.subscribe((v) => forceUpdate());
         return () => s.unsubscribe(); 
     }, []);
 
