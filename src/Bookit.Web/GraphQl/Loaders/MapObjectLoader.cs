@@ -29,7 +29,7 @@ public class MapObjectLoader : MutableLoader<MapObject, int, GraphQlContext>
         Field(x => x.IsDeleted).Editable().Filterable();
         Field("view")
             .FromLoader<MapObjectViewLoader, MapObjectView>(
-                (mapObject, mapObjectView) => mapObject.Id == mapObjectView.Id)
+                (mapObject, mapObjectView) => mapObject.Id == mapObjectView.MapObjectId)
             .SingleOrDefault();
     }
 

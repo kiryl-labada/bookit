@@ -18,21 +18,13 @@ export class DrawPolygonPlugin extends MapPlugin {
     private path: fabric.Line[] = [];
 
     key: string = 'draw_polygon_plugin';
-    activate(canvas: fabric.Canvas, controller: MapCanvasController): void {
-        this.canvas = canvas;
 
+    protected init(): void {
         this.listeners.push({ event: 'mouse:down', handler: this.createAddPointListener() });
         this.listeners.push({ event: 'mouse:move', handler: this.createMouseMoveListener() });
-
-        super.activate(canvas, controller);
     }
 
-    deactivate(): void {
-        this.cleanUp();
-        super.deactivate();
-    }
-
-    private cleanUp() {
+    protected cleanUp() {
         this.path.forEach((line) => this.canvas.remove(line));
         this.points = [];
         this.path = [];
@@ -49,10 +41,10 @@ export class DrawPolygonPlugin extends MapPlugin {
             if (ctx.points.length > 2 && isClose(ctx.canvas, point, ctx.points[0])) {
                 this.selection = true;
                 const polygon = createPolygon(ctx.points);
-                ctx.canvas.add(polygon);
-    
+
+                ctx.controller.createItem(polygon);
+
                 ctx.cleanUp();
-                ctx.canvas.renderAll();
     
                 return;
             }

@@ -1,5 +1,4 @@
 import { fabric } from 'fabric';
-import { MapCanvasController } from '../../components';
 import { MapPlugin } from './types';
 
 export class DrawRectanglePlugin extends MapPlugin {
@@ -9,14 +8,18 @@ export class DrawRectanglePlugin extends MapPlugin {
     private rect: fabric.Rect | null = null;
 
     key: string = 'draw_rectangle_plugin';
-    activate(canvas: fabric.Canvas, controller: MapCanvasController): void {
-        this.canvas = canvas;
 
+    protected init(): void {
         this.listeners.push({ event: 'mouse:down', handler: this.createStartDrawingListener() });
         this.listeners.push({ event: 'mouse:move', handler: this.createMouseMoveListener() });
         this.listeners.push({ event: 'mouse:up', handler: this.createEndDrawingListener() });
+    }
 
-        super.activate(canvas, controller);
+    protected cleanUp(): void {
+        if (this.rect) this.canvas.remove(this.rect);
+        this.rect = null;
+        this.origX = 0;
+        this.origY = 0;
     }
 
     private createStartDrawingListener() {
@@ -45,6 +48,10 @@ export class DrawRectanglePlugin extends MapPlugin {
         const ctx = this;
         return function(this: any, opt: fabric.IEvent<MouseEvent>) {
             ctx.isDown = false;
+            if (ctx.rect) {
+                ctx.controller.createItem(ctx.rect);
+                ctx.canvas.remove(ctx.rect);
+            }
         };
     }
 
@@ -64,7 +71,7 @@ export class DrawRectanglePlugin extends MapPlugin {
             ctx.rect.set({ width: Math.abs(ctx.origX - pointer.x) });
             ctx.rect.set({ height: Math.abs(ctx.origY - pointer.y) });
             
-            ctx.canvas.renderAll();
+            ctx.canvas.requestRenderAll();
         };
     }
 }

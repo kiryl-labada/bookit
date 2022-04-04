@@ -9,4 +9,7 @@ public class MapObjectView
     public string? BackgroundUrl { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+
+    public int MapObjectId { get; set; }
+    public MapObject? MapObject { get; set; }
 }

@@ -32,6 +32,7 @@ export const patchMutation = gql`
                     structure
                     createdAt
                     updatedAt
+                    mapObjectId
                 }
             }
         }

@@ -66,15 +66,11 @@ function isAllowed(vptCoords: EventThis['vptCoords'], step: fabric.Point, bounds
 
 export class MoveCanvasPlugin extends MapPlugin {
     key: string = 'move_canvas_plugin';
-    activate(canvas: fabric.Canvas, controller: MapCanvasController): void {
-        this.canvas = canvas;
-        this.controller = controller;
-        
+
+    protected init() {
         this.listeners.push({ event: 'mouse:down', handler: this.createStartMoveListener() });
         this.listeners.push({ event: 'mouse:up', handler: this.createEndMoveListener() });
         this.listeners.push({ event: 'mouse:move', handler: this.createMovingListener() });
-
-        super.activate(canvas, controller);
     }
 
     private createStartMoveListener() {

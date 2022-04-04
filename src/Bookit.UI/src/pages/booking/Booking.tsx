@@ -4,11 +4,17 @@ import { Panel, FlexCell, Button, Text, Spinner, TextInput } from '@epam/loveshi
 import css from './Booking.module.scss';
 import { BookingDb, MapObject, MapObjectType, useBookingDbRef } from '../../db';
 import { MapCanvasGeneric } from '../../components/map/MapCanvasGeneric';
-import { DrawPolygonPlugin, MapPlugin, MoveCanvasPlugin, useForceUpdate, ZoomPlugin } from '../../common';
+import { DrawPolygonPlugin, DrawRectanglePlugin, MapPlugin, MoveCanvasPlugin, useForceUpdate, ZoomPlugin } from '../../common';
 
 const defaultMapPlugins: MapPlugin[] = [new MoveCanvasPlugin(), new ZoomPlugin()];
 
 type DrawMode = 'pointer' | 'rect' | 'move' | 'polygon';
+
+const DrawModeToPlugin: { [key: string]: MapPlugin | null } = {
+    'pointer': null,
+    'rect': new DrawRectanglePlugin(),
+    'polygon': new DrawPolygonPlugin(),
+};
 
 export const BookingPage: FC<{}> = (props) => {
     const dbRef = useBookingDbRef();
@@ -33,7 +39,25 @@ export const BookingPage: FC<{}> = (props) => {
     }, [showLeftPanel]);
 
     const mapId = dbRef.db.mapObjects.find({ type: MapObjectType.MAP }).one()?.id;
-    const renderButton = (buttonMode: DrawMode) => <Button caption={ buttonMode } fontSize={ mode === buttonMode ? '18' : '12' } onClick={ () => setMode(buttonMode) } />;
+    const renderButton = (buttonMode: DrawMode) => (
+        <Button 
+            caption={ buttonMode } 
+            fontSize={ mode === buttonMode ? '18' : '12' } 
+            onClick={ () => {
+                if (buttonMode === mode) return;
+
+                const prevPlugin = DrawModeToPlugin[mode];
+                const newPlugin = DrawModeToPlugin[buttonMode];
+
+                setMode(buttonMode);
+                setPlugins((prevPlugins) => {
+                    const newPlugins = [...prevPlugins.filter((p) => p !== prevPlugin)];
+                    newPlugin && newPlugins.push(newPlugin);
+                    return newPlugins;
+                });
+            } } 
+        />
+    );
 
     if (isLoading) {
         return (
@@ -47,7 +71,6 @@ export const BookingPage: FC<{}> = (props) => {
                 <Panel background='night50' rawProps={ { style: { height: '100%' } } } >
                     { renderButton('pointer') }
                     { renderButton('rect') }
-                    { renderButton('move') }
                     { renderButton('polygon') }
                 </Panel>
             </div>

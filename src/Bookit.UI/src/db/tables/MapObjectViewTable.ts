@@ -6,7 +6,8 @@ export const MapObjectViewTable = new DbTable<MapObjectView, number, BookingDbTa
     tableName: 'mapObjectViews',
     typeName: 'MapObjectView',
     fields: {
-        id: {
+        id: { isGenerated: true },
+        mapObjectId: {
             fk: {
                 tableName: 'mapObjects',
                 relationType: DbRelationType.Association,

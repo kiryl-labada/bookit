@@ -23,12 +23,9 @@ export function enableZoom(canvas: fabric.Canvas) {
 
 export class ZoomPlugin extends MapPlugin {
     key: string = 'zoom_plugin';
-    activate(canvas: fabric.Canvas, controller: MapCanvasController): void {
-        this.canvas = canvas;
-        
-        this.listeners.push({ event: 'mouse:wheel', handler: this.createMouseWheelListener() });
 
-        super.activate(canvas, controller);
+    protected init() {
+        this.listeners.push({ event: 'mouse:wheel', handler: this.createMouseWheelListener() });
     }
 
     private createMouseWheelListener() {

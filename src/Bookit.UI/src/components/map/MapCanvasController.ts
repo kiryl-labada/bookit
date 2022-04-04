@@ -1,7 +1,7 @@
 import { fabric } from 'fabric';
 import { BehaviorSubject, Unsubscribable, fromEventPattern } from 'rxjs';
 import { Bounds } from '../../common/canvas/MoveCanvasPlugin';
-import { BookingDb, BookingDbRef, MapObject, MapObjectType, MapObjectView } from '../../db';
+import { BookingDb, BookingDbRef, MapObject, MapObjectType, MapObjectView, StateType } from '../../db';
 import { MapPlugin } from '../../common';
 
 interface MapObjectState {
@@ -96,14 +96,16 @@ export class MapCanvasController {
             if (existingPlugin === plugin) return;
             
             existingPlugin?.deactivate();
+            console.log('deactivate plugin', existingPlugin?.key);
             this.plugins.set(plugin.key, plugin);
             plugin.activate(this.canvas, this);
+            console.log('activate plugin', plugin.key);
         });
 
         const keys = new Set(plugins.map((p) => p.key));
         const keysToDelete: string[] = [];
         this.plugins.forEach((_, k) => !keys.has(k) && keysToDelete.push(k));
-        keysToDelete.forEach((k) => { this.plugins.get(k)?.deactivate(); this.plugins.delete(k); });
+        keysToDelete.forEach((k) => { this.plugins.get(k)?.deactivate(); this.plugins.delete(k); console.log('delete plugin', k); });
     }
 
     detectChanges() {
@@ -169,7 +171,7 @@ export class MapCanvasController {
 
             itemModified.subscribe((e) => {
                 console.log('item modified');
-                this.dbRef.actions.updateMapObjectView({ id: item.id, structure: JSON.stringify(obj) })
+                this.dbRef.actions.updateMapObjectView({ id: item.mapObjectViewId, structure: JSON.stringify(obj) })
             });
 
             // obj.on('selected' as any, () => {
@@ -214,6 +216,10 @@ export class MapCanvasController {
         }
     }
 
+    createItem(view: fabric.Object) {
+        this.dbRef.actions.createMapObject({ mapId: this.mapId, structure: JSON.stringify(view) });
+    }
+
     resize({width, height}: { width: number, height: number }) {
         if (this.canvas.width !== width || this.canvas.height !== height) {
             this.canvas.setWidth(width);
@@ -243,6 +249,7 @@ interface MapObjectVM {
     type: MapObject['type'];
     updatedAt: MapObject['updatedAt'];
     structure: MapObjectView['structure'];
+    mapObjectViewId: MapObjectView['id'];
     backgroundUrl: MapObjectView['backgroundUrl'];
 }
 
@@ -253,13 +260,14 @@ const getMapObjects = (db: BookingDb, { mapId }: { mapId: number }): MapObjectVM
     const mapObjects = db.mapObjects.find({ mapId }).toArray();
 
     return [map, ...mapObjects].map((i) => {
-        const { backgroundUrl, structure } = db.mapObjectViews.byId(i.id);
+        const { id, backgroundUrl, structure } = db.mapObjectViews.find({ mapObjectId: i.id }).one();
         return {
             id: i.id,
             mapId: i.mapId,
             type: i.type,
             updatedAt: i.updatedAt,
             backgroundUrl,
+            mapObjectViewId: id,
             structure,
         };
     });

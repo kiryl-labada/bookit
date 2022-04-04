@@ -14,7 +14,7 @@ public class MapObjectEntityTypeConfiguration : IEntityTypeConfiguration<MapObje
             .IsRequired();
         
         builder.HasOne(x => x.MapObjectView)
-            .WithOne()
-            .HasForeignKey<MapObjectView>(x => x.Id);
+            .WithOne(x => x.MapObject)
+            .HasForeignKey<MapObjectView>(x => x.MapObjectId);
     }
 }

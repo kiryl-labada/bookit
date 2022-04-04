@@ -24,6 +24,12 @@ public class MapObjectViewLoader : MutableLoader<MapObjectView, int, GraphQlCont
         Field(x => x.BackgroundUrl).Editable();
         Field(x => x.CreatedAt);
         Field(x => x.UpdatedAt);
+        Field(x => x.MapObjectId);
+
+        Field("mapObject")
+            .FromLoader<MapObjectLoader, MapObject>(
+                (mapObjectView, mapObject) => mapObjectView.MapObjectId == mapObject.Id,
+                reverseNavigationProperty: mo => mo.MapObject!);
     }
 
     protected override void BeforeCreate(GraphQlContext context, MapObjectView entity)

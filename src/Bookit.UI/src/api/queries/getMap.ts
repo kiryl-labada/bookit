@@ -18,6 +18,7 @@ export const getMapQuery = gql`
                     structure
                     createdAt
                     updatedAt
+                    mapObjectId
                 }
             }
         }

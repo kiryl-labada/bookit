@@ -35,5 +35,6 @@ export interface MapObjectView {
     backgroundUrl: string | null;
     createdAt: Date;
     updatedAt: Date;
+    mapObjectId: number;
     __typename?: 'MapObjectView';
 }

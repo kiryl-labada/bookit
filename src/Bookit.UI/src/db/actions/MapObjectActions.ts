@@ -1,18 +1,33 @@
 import { getTempId } from '@epam/uui-db';
-import { MapObject } from '../models';
+import { MapObject, MapObjectType, MapObjectView, StateType } from '../models';
 import { Action } from './common';
 
 
 const updateMapObject: Action<Partial<MapObject>> = (patch) => (db) => ({ mapObjects: [patch] });
 
-const createMapObject: Action<Partial<MapObject>> = (m) => (db) => {
-    const id = m.id || getTempId();
-    const item = {
-        id,
-        name: m.name
+const createMapObject: Action<{ mapId: number, structure: string }> = ({ mapId, structure}) => (db) => {
+    const now = new Date();
+    const mapObject: MapObject = {
+        id: getTempId(), 
+        name: 'New map object',
+        state: StateType.Draft,
+        type: MapObjectType.PLACE,
+        mapId: mapId,
+        isDeleted: false,
+        createdAt: now,
+        updatedAt: now,
     };
 
-    return { mapObjects: [item] };
+    const mapObjectView: MapObjectView = {
+        id: getTempId(),
+        backgroundUrl: null,
+        structure,
+        createdAt: now,
+        updatedAt: now,
+        mapObjectId: mapObject.id,
+    };
+
+    return { mapObjects: [mapObject], mapObjectViews: [mapObjectView] };
 };
 
 export const mapObjectActions = {
