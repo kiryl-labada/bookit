@@ -1,4 +1,3 @@
-import { MapCanvasController } from '../../components/map/MapCanvasController';
 import { fabric } from 'fabric';
 import { MapPlugin } from './types';
 

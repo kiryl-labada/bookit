@@ -1,6 +1,5 @@
-import { MapCanvasController } from '../../components/map/MapCanvasController';
 import { fabric } from 'fabric';
-import { Listener, MapPlugin } from './types';
+import { MapPlugin } from './types';
 
 function isClose(canvas: fabric.Canvas, point1: fabric.Point, point2: fabric.Point) {
     return (canvas.getZoom() * point1.distanceFrom(point2)) < 10;

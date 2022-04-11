@@ -5,9 +5,9 @@ import { FetchResult } from '@apollo/client';
 import { addTypenameToDocument } from '@apollo/client/utilities';
 import { blankBookingDb, BookingDb, BookingDbTables } from './BookingDb';
 import { svc } from '../services';
-import { patchMutation } from '../api';
+import { patchMutation } from './api';
 import { bindActionSet, bookingActions, BookingActions } from './actions';
-import { getMapQuery } from '../api/queries/getMap';
+import { getMapQuery } from './api/queries/getMap';
 
 export interface FetchState {
     isLoading: boolean;

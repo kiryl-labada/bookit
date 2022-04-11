@@ -12,8 +12,7 @@ import { DbContext } from '@epam/uui-db';
 import { ErrorHandler } from '@epam/loveship';
 import { App } from './App';
 import { svc } from './services';
-import { getApi } from './api';
-import { BookingDbRef } from './db';
+import { BookingDbRef, getApi } from './db';
 
 const history = createBrowserHistory();
 const dbRef = new BookingDbRef();

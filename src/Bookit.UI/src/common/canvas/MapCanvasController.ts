@@ -1,8 +1,7 @@
 import { fabric } from 'fabric';
 import { BehaviorSubject, Unsubscribable, fromEventPattern } from 'rxjs';
-import { Bounds } from '../../common/canvas/MoveCanvasPlugin';
-import { BookingDb, BookingDbRef, MapObject, MapObjectType, MapObjectView, StateType } from '../../db';
-import { MapPlugin } from '../../common';
+import { BookingDb, BookingDbRef, MapObject, MapObjectType, MapObjectView } from '../../db';
+import { MapPlugin, Bounds } from './plugins';
 
 interface MapObjectState {
     current: MapObjectVM;

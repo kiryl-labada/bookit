@@ -1,4 +1,4 @@
-import { MapCanvasController } from '../../components/map/MapCanvasController';
+import { MapCanvasController } from '../MapCanvasController';
 
 export interface Listener {
     event: string;

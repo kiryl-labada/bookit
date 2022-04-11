@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { BehaviorSubject, fromEvent, interval, throttle, Unsubscribable } from 'rxjs';
 import { BookingDbRef } from '../../db';
-import { MapCanvasController } from './MapCanvasController';
+import { MapCanvasController } from '../../common/canvas/MapCanvasController';
 import { MapPlugin } from '../../common';
-// import memoize from "memoize-one";
 
 interface A {
     firstName: string;
@@ -17,7 +16,7 @@ interface MapCanvasGenericProps {
     selectedItem?: BehaviorSubject<number | null>;
 }
 
-export class MapCanvasGeneric extends React.Component<MapCanvasGenericProps, A> {
+export class MapCanvas extends React.Component<MapCanvasGenericProps, A> {
     private mapController: MapCanvasController | null = null;
     private htmlCanvas: HTMLCanvasElement | null = null;
     private subscriptions: Unsubscribable[] = [];
