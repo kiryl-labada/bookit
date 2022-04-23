@@ -14,6 +14,7 @@ interface MapCanvasGenericProps {
     forceResize: boolean;
     plugins: MapPlugin[];
     selectedItem?: BehaviorSubject<number | null>;
+    isEditMode: boolean;
 }
 
 export class MapCanvas extends React.Component<MapCanvasGenericProps, A> {
@@ -40,7 +41,7 @@ export class MapCanvas extends React.Component<MapCanvasGenericProps, A> {
         this.htmlCanvas = canvas;
         if (canvas) {
             this.mapController && this.mapController.dispose();
-            this.mapController = new MapCanvasController(canvas, this.props.mapId, this.props.dbRef, { selectedItem: this.props.selectedItem });
+            this.mapController = new MapCanvasController(canvas, this.props.mapId, this.props.isEditMode, this.props.dbRef, { selectedItem: this.props.selectedItem });
         }
     }
 

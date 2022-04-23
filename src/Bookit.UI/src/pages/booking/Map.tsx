@@ -17,16 +17,17 @@ const DrawModeToPlugin: { [key: string]: MapPlugin | null } = {
 
 export interface MapProps {
     mapId: number;
+    isEditMode: boolean;
 }
 
-export const Map: FC<MapProps> = (props) => {
+export const Map: FC<MapProps> = ({ mapId, isEditMode }) => {
     const dbRef = useBookingDbRef();
     const [mode, setMode] = useState<DrawMode>('pointer');
     const [showLeftPanel, setShowLeftPanel] = useState(true);
     const [forceResize, setForceResize] = useState(false);
     const forceUpdate = useForceUpdate();
     const [plugins, setPlugins] = useState<MapPlugin[]>(defaultMapPlugins);
-    const [selectedItemId] = useState(new BehaviorSubject<number | null>(props.mapId));
+    const [selectedItemId] = useState(new BehaviorSubject<number | null>(mapId));
 
     const { isLoading } = dbRef.fetchMap();
 
@@ -56,7 +57,7 @@ export const Map: FC<MapProps> = (props) => {
 
     useEffect(() => {
         const s = selectedItemId.subscribe((v) => {
-            v === null ? selectedItemId.next(props.mapId) : forceUpdate();
+            v === null ? selectedItemId.next(mapId) : forceUpdate();
         });
         return () => s.unsubscribe(); 
     }, []);
@@ -80,7 +81,7 @@ export const Map: FC<MapProps> = (props) => {
             <div style={ { flexBasis: 250, flexShrink: 0, marginLeft: !showLeftPanel ? -250 : undefined } } className={ css.sidebar } >
                 <Panel background='night50' rawProps={ { style: { height: '100%' } } } >
                     <LeftSideBar 
-                        mapId={ props.mapId } 
+                        mapId={ mapId } 
                         selectedItemId={ selectedItemProps }
                         mode={ modeProps }
                     />
@@ -88,12 +89,13 @@ export const Map: FC<MapProps> = (props) => {
             </div>
             <div style={ { flexGrow: 1, overflow: 'hidden' } } >
                 <MapCanvas 
-                    key={ props.mapId } 
-                    mapId={ props.mapId } 
+                    key={ mapId } 
+                    mapId={ mapId } 
                     dbRef={ dbRef } 
                     forceResize={ forceResize } 
                     plugins={ plugins } 
-                    selectedItem={ selectedItemId } 
+                    selectedItem={ selectedItemId }
+                    isEditMode={ isEditMode }
                 />
             </div>
             <FlexCell width={ 250 } shrink={ 0 } cx={ css.sidebar } >

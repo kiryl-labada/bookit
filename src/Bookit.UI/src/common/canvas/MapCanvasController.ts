@@ -29,11 +29,12 @@ export class MapCanvasController {
 
     bounds: Bounds | null = null;
 
-    constructor(canvas: HTMLCanvasElement, mapId: number, dbRef: BookingDbRef, options: MapCanvasOptions = {}) {
+    constructor(canvas: HTMLCanvasElement, mapId: number, isEditMode: boolean,  dbRef: BookingDbRef, options: MapCanvasOptions = {}) {
         this.canvas = new fabric.Canvas(canvas);
         this.dbRef = dbRef;
         this.mapId = mapId;
         this.options = options;
+        !isEditMode && this.setReadonlyMode();
         this.init();
     }
 
@@ -148,6 +149,25 @@ export class MapCanvasController {
         this.addQueue.length = 0;
         this.removeQueue.length = 0;
         this.updateQueue.length = 0;
+    }
+    
+    setReadonlyMode() {
+        this.canvas.selection = false;
+        this.canvas.on('object:added', (e) => {
+            const obj = e.target;
+            if (!obj) return;
+            
+            obj.lockMovementX = true;
+            obj.lockMovementY = true;
+            obj.lockRotation = true;
+            obj.lockScalingFlip = true;
+            obj.lockScalingX = true;
+            obj.lockScalingY = true;
+            obj.lockSkewingX = true;
+            obj.lockSkewingY = true;
+            obj.lockUniScaling = true;
+            obj.hasControls = false;
+        })
     }
 
     mountItem(item: MapObjectVM) {
