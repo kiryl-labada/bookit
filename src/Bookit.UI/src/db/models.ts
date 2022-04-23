@@ -38,3 +38,9 @@ export interface MapObjectView {
     mapObjectId: number;
     __typename?: 'MapObjectView';
 }
+
+export enum MapPageTab {
+    MAP = 'MAP',
+    BUILDER = 'BUILDER',
+    DASHBOARD = 'DASHBOARD',
+}
