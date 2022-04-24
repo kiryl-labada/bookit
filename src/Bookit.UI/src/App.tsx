@@ -13,10 +13,10 @@ export const App = () => {
     return (
         <div className={ css.app }>
             <Route component={ AppHeader } />
-            <main style={ { position: 'relative' } }>
+            <main /*style={ { position: 'relative' } }*/>
                 <Route path="/" exact component={MainPage} />
                 <Route path="/booking" exact component={BookingPage} />
-                <Route path="/catalog" exact component={CatalogPage} />
+                <Route path="/catalog" component={CatalogPage} />
             </main>
             {/* <footer></footer> */}
         </div>

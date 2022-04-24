@@ -4,6 +4,7 @@ import { Router } from 'react-router-dom';
 
 import '@epam/uui-components/styles.css';
 import '@epam/loveship/styles.css';
+import '@epam/promo/styles.css';
 
 import { createBrowserHistory } from 'history';
 import { ContextProvider } from '@epam/uui';

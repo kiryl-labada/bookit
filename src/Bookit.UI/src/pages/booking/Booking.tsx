@@ -20,7 +20,7 @@ export const BookingPage: FC = () => {
     const mapId = dbRef.db.mapObjects.find({ type: MapObjectType.MAP }).one()?.id;
     
     const Tab = () => {
-        if (tab === MapPageTab.MAP || tab == MapPageTab.BUILDER) {
+        if (tab === MapPageTab.MAP || tab === MapPageTab.BUILDER) {
             return (
                 <Map key={ tab } mapId={ mapId } isEditMode={ tab === MapPageTab.BUILDER } />
             )
@@ -32,7 +32,7 @@ export const BookingPage: FC = () => {
     return (
         <div>
             <HeaderPanel selectedTab={ tab } getTabLink={ getTabLink } />
-            <div style={ { display: 'flex', flex: '1 1 auto', position: 'absolute', width: '100%', height: 'calc(100% - 36px)' } }>
+            <div style={ { display: 'flex', flex: '1 1 auto', position: 'absolute', width: '100%', height: 'calc(100% - 96px)' } }>
                 { Tab() }
             </div>
         </div>

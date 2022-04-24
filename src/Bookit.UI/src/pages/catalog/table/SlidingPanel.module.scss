@@ -1,0 +1,86 @@
+@use '~@epam/promo/assets/styles/colors' as *;
+
+@keyframes showLeftFilterPanel {
+  0% {
+    transform: translate3d(-100%, 0, 0);
+    margin-right: var(--sliding-panel-margin);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0);
+    margin-right: 0;
+  }
+}
+
+@keyframes hideLeftFilterPanel {
+  0% {
+    transform: translate3d(0, 0, 0);
+    margin-right: 0;
+  }
+
+  100% {
+    transform: translate3d(-100%, 0, 0);
+    margin-right: var(--sliding-panel-margin);
+  }
+}
+
+@keyframes showRightFilterPanel {
+  0% {
+    transform: translate3d(100%, 0, 0);
+    margin-left: var(--sliding-panel-margin);
+  }
+
+  100% {
+    transform: translate3d(0, 0, 0);
+    margin-left: 0;
+  }
+}
+
+@keyframes hideRightFilterPanel {
+  0% {
+    transform: translate3d(0, 0, 0);
+    margin-left: 0;
+  }
+
+  100% {
+    transform: translate3d(100%, 0, 0);
+    margin-left: var(--sliding-panel-margin);
+  }
+}
+
+.container {
+  overflow: hidden;
+  height: calc(100vh - 60px);
+  border-right: 1px solid var(--divider-color, $gray40);
+  flex-shrink: 0;
+
+  &Left {
+    transform: translate3d(-100%, 0, 0);
+    margin-right: var(--sliding-panel-margin);
+
+    &Hide {
+      animation: hideLeftFilterPanel 500ms;
+      animation-fill-mode: forwards;
+    }
+
+    &Show {
+      animation: showLeftFilterPanel 500ms;
+      animation-fill-mode: forwards;
+    }
+  }
+
+  &Right {
+    transform: translate3d(100%, 0, 0);
+    margin-left: var(--sliding-panel-margin);
+
+    &Hide {
+      animation: hideRightFilterPanel 500ms;
+      animation-fill-mode: forwards;
+    }
+
+    &Show {
+      animation: showRightFilterPanel 500ms;
+      animation-fill-mode: forwards;
+    }
+  }
+}
