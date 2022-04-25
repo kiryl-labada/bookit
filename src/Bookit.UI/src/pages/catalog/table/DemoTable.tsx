@@ -1,43 +1,19 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { DataRowOptions, cx, useLazyDataSource, useTableState } from "@epam/uui-core";
-import { LazyDataSourceApi } from '@epam/uui';
-import { DataTable, FlexRow, Text } from '@epam/promo';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {cx, DataRowOptions, useLazyDataSource, useTableState} from "@epam/uui-core";
+import {LazyDataSourceApiRequest} from '@epam/uui';
+import {DataTable, FlexRow, Text} from '@epam/promo';
 import css from './DemoTable.module.scss';
-import { getFilters } from './data';
-import { getColumns } from './columns';
-import { Person, PersonTableFilter, PersonTableRecord } from './types';
-import { FilterPanel } from './FilterPanel';
-import { InfoSidebarPanel } from './InfoSidebarPanel';
-import { SlidingPanel } from './SlidingPanel';
-import { FilterPanelOpener } from './FilterPanelOpener';
+import {getFilters} from './data';
+import {getColumns} from './columns';
+import {FilterPanel} from './FilterPanel';
+import {InfoSidebarPanel} from './InfoSidebarPanel';
+import {SlidingPanel} from './SlidingPanel';
+import {FilterPanelOpener} from './FilterPanelOpener';
 import {svc} from "../../../services";
-
-const persons: Person[] = [
-    { id: 1, name: 'A B', firstName: 'A', lastName: 'B', email: 'A@gmail.com', uid: 'A B', birthDate: new Date(), },
-    { id: 2, name: 'C D', firstName: 'C', lastName: 'D', email: 'C@gmail.com', uid: 'C D', birthDate: new Date(), },
-];
-
-let id = 1;
-
-const generatePersons = (count: number) => {
-    let result = [];
-    for (let i = 0; i < count; i++) {
-        result.push({ ...persons[0], name: `Name ${id}`, id: id++ });
-    }
-    
-    return result;
-}
-
-export const api: LazyDataSourceApi<PersonTableRecord, number, PersonTableFilter> = (request, ctx) => {
-    console.log('r', request);
-    const result = generatePersons(request.range?.count ?? 20);
-    return Promise.resolve({
-        items: result,
-        count: 100,
-    })
-};
+import {MapObject, useBookingDbRef} from "../../../db";
 
 export const DemoTable: React.FC = () => {
+    const dbRef = useBookingDbRef();
     const [isFilterPanelOpened, setIsFilterPanelOpened] = useState(false);
     const [isInfoPanelOpened, setIsInfoPanelOpened] = useState(false);
     const closeInfoPanel = useCallback(() => setIsInfoPanelOpened(false), []);
@@ -53,12 +29,20 @@ export const DemoTable: React.FC = () => {
         columns: columnsSet,
     });
     
-    const dataSource = useLazyDataSource<PersonTableRecord, number, PersonTableFilter>({
-        api: api,
-        getId: i => i.id,
+    const dataSource = useLazyDataSource<MapObject, number, any>({
+        api: async (request: LazyDataSourceApiRequest<MapObject, number, any>) => {
+            const { range, filter, sorting, search } = request;
+            
+            return await dbRef.loadCatalogItems({
+                filter,
+                sorting,
+                first: range!.count,
+                after: `${range!.from - 1}`,
+            })
+        },
     }, []);
     
-    const { current: rowOptions } = React.useRef<DataRowOptions<PersonTableRecord, number>>({
+    const { current: rowOptions } = React.useRef<DataRowOptions<MapObject, number>>({
         checkbox: { isVisible: true },
         isSelectable: true,
         onClick(rowProps) {
@@ -109,7 +93,7 @@ export const DemoTable: React.FC = () => {
             </div>
             
             <InfoSidebarPanel
-                data={ dataSource.getById(tableStateApi.tableState.selectedId) as Person }
+                data={ dataSource.getById(tableStateApi.tableState.selectedId) as MapObject }
                 isVisible={ isInfoPanelOpened }
                 onClose={ closeInfoPanel }
             />

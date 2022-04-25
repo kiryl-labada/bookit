@@ -3,10 +3,10 @@ import css from "./InfoSidebarPanel.module.scss";
 import { FlexCell, FlexRow, FlexSpacer, IconButton, Panel, ScrollBars, Text } from "@epam/promo";
 import { ReactComponent as CrossIcon } from "@epam/assets/icons/common/navigation-close-24.svg";
 import { cx } from "@epam/uui";
-import { Person } from "./types";
+import {MapObject} from "../../../db";
 
 interface SidebarPanelProps {
-    data: Person;
+    data: MapObject;
     isVisible: boolean;
     onClose(): void;
 }
@@ -22,7 +22,7 @@ export const InfoSidebarPanel: React.FC<SidebarPanelProps> = ({ data, isVisible,
             </Text>
         </FlexRow>;
     };
-
+    
     return (
         <div className={ cx(css.infoSidebarPanelWrapper, isVisible ? "show" : "hide") }>
             <Panel cx={ css.wrapper } background="white">
@@ -34,8 +34,9 @@ export const InfoSidebarPanel: React.FC<SidebarPanelProps> = ({ data, isVisible,
                 { data && (
                     <ScrollBars>
                         { renderInfoRow("Name", data.name) }
-                        { renderInfoRow("Email", data.email) }
-                        { renderInfoRow("UID", data.uid) }
+                        { renderInfoRow("Created At", new Date(data.createdAt).toLocaleDateString()) }
+                        { renderInfoRow("Updated At", new Date(data.updatedAt).toLocaleDateString()) }
+                        { renderInfoRow("State", data.state) }
                     </ScrollBars>
                 ) }
             </Panel>

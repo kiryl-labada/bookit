@@ -1,4 +1,28 @@
+export interface InFilter<T> {
+    in?: T[];
+    nin?: T[];
+    eq?: T;
+    neq?: T;
+    isNull?: boolean;
+}
 
+export interface ComparisonsFilter<T> extends InFilter<T> {
+    gt?: T;
+    lt?: T;
+    gte?: T;
+    lte?: T;
+}
+
+export interface CompoundFilter<TFilter> {
+    not?: TFilter;
+    and?: TFilter[];
+    or?: TFilter[];
+}
+
+export interface Connection<T> {
+    items: T[];
+    totalCount?: number;
+}
 
 export interface Story {
     id: number;
@@ -43,4 +67,8 @@ export enum MapPageTab {
     MAP = 'MAP',
     BUILDER = 'BUILDER',
     DASHBOARD = 'DASHBOARD',
+}
+
+export interface CatalogItemFilter extends CompoundFilter<CatalogItemFilter> {
+    userId?: InFilter<number>;
 }

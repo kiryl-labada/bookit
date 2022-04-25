@@ -17,5 +17,6 @@ public class GraphQlQuery : Query<GraphQlContext>
         Connection<TaskItemLoader>("tasks");
         Connection<MapObjectLoader>("mapObjects");
         Connection<MapObjectViewLoader>("mapObjectViews");
+        Connection<CatalogItemLoader>("catalogItems");
     }
 }

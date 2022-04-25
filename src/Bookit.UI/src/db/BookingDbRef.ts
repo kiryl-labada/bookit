@@ -1,13 +1,14 @@
 import { DbRef, flattenResponse, DbPatch, useDbRef, DbSaveResponse } from '@epam/uui-db';
 import { DocumentNode } from 'graphql';
 import { print } from 'graphql/language/printer';
-import { FetchResult } from '@apollo/client';
+import {FetchResult, QueryOptions} from '@apollo/client';
 import { addTypenameToDocument } from '@apollo/client/utilities';
 import { blankBookingDb, BookingDb, BookingDbTables } from './BookingDb';
 import { svc } from '../services';
-import { patchMutation } from './api';
+import {getCatalogItems, patchMutation} from './api';
 import { bindActionSet, bookingActions, BookingActions } from './actions';
 import { getMapQuery } from './api/queries/getMap';
+import {CatalogItemFilter, Connection, MapObject} from "./models";
 
 export interface FetchState {
     isLoading: boolean;
@@ -26,6 +27,20 @@ export class BookingDbRef extends DbRef<BookingDbTables, BookingDb> {
 
     private fetchCache: Map<DocumentNode, Map<string, FetchState>> = new Map();
 
+
+    public loadGQL<T = any>(options: QueryOptions<any>) {
+        const document = print(addTypenameToDocument(options.query));
+
+        return svc.api.gql.query<T>({ query: document, variables: options.variables }).then((result) => {
+            const flatten = flattenResponse(result, blankBookingDb.tables);
+            this.commitFetch(flatten);
+            return {
+                ...result,
+                flatten,
+            };
+        });
+    }
+    
     public fetchGQL(
         query: DocumentNode,
         variables: any,
@@ -91,8 +106,15 @@ export class BookingDbRef extends DbRef<BookingDbTables, BookingDb> {
         }).then((r) => r.data);
     }
 
-    fetchMap() {
+    public fetchMap() {
         return this.fetchGQL(getMapQuery, {});
+    }
+    
+    public loadCatalogItems(filter?: { first?: number, after?: string, search?: string, sorting?: any, filter?: CatalogItemFilter }) {
+        return this.loadGQL<{ catalogItems: Connection<MapObject> }>({ query: getCatalogItems, variables: filter }).then((res) => ({
+            items: res.data!.catalogItems.items,
+            count: res.data!.catalogItems.totalCount,
+        }));
     }
 }
 
