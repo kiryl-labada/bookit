@@ -16,13 +16,13 @@ public class MapObjectLoader : MutableLoader<MapObject, int, GraphQlContext>
 
     protected override void OnConfigure()
     {
-        Field(x => x.Id);
-        Field(x => x.Name).Editable();
-        Field(x => x.MapId);
+        Field(x => x.Id).Filterable();
+        Field(x => x.Name).Editable().Sortable();
+        Field(x => x.MapId).Filterable();
         Field(x => x.State);
         Field(x => x.Type);
-        Field(x => x.CreatedAt);
-        Field(x => x.UpdatedAt);
+        Field(x => x.CreatedAt).Sortable();
+        Field(x => x.UpdatedAt).Sortable();
         Field(x => x.IsDeleted).Editable().Filterable();
         Field("view")
             .FromLoader<MapObjectViewLoader, MapObjectView>(

@@ -1,6 +1,6 @@
 import React from "react";
 import css from "./InfoSidebarPanel.module.scss";
-import { FlexCell, FlexRow, FlexSpacer, IconButton, Panel, ScrollBars, Text } from "@epam/promo";
+import {Button, FlexCell, FlexRow, FlexSpacer, IconButton, Panel, ScrollBars, Text } from "@epam/promo";
 import { ReactComponent as CrossIcon } from "@epam/assets/icons/common/navigation-close-24.svg";
 import { cx } from "@epam/uui";
 import {MapObject} from "../../../db";
@@ -32,12 +32,15 @@ export const InfoSidebarPanel: React.FC<SidebarPanelProps> = ({ data, isVisible,
                     <FlexCell shrink={ 0 } width="auto"><IconButton icon={ CrossIcon } onClick={ onClose }/></FlexCell>
                 </FlexRow>
                 { data && (
-                    <ScrollBars>
-                        { renderInfoRow("Name", data.name) }
-                        { renderInfoRow("Created At", new Date(data.createdAt).toLocaleDateString()) }
-                        { renderInfoRow("Updated At", new Date(data.updatedAt).toLocaleDateString()) }
-                        { renderInfoRow("State", data.state) }
-                    </ScrollBars>
+                    <>
+                        <ScrollBars>
+                            { renderInfoRow("Name", data.name) }
+                            { renderInfoRow("Created At", new Date(data.createdAt).toLocaleDateString()) }
+                            { renderInfoRow("Updated At", new Date(data.updatedAt).toLocaleDateString()) }
+                            { renderInfoRow("State", data.state) }
+                        </ScrollBars>
+                        <Button caption='View' link={ { pathname: '/booking', search: `?id=${data.id}` } } />
+                    </>
                 ) }
             </Panel>
         </div>

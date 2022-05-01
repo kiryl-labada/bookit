@@ -1,9 +1,16 @@
-import { useEffect, useState, FC, useMemo } from 'react';
-import { BehaviorSubject } from 'rxjs';
-import { Panel, FlexCell, Button, Spinner } from '@epam/loveship';
-import { MapObjectType, useBookingDbRef } from '../../db';
-import { DrawPolygonPlugin, DrawRectanglePlugin, MapPlugin, MoveCanvasPlugin, useForceUpdate, ZoomPlugin } from '../../common';
-import { DrawMode, LeftSideBar, MapCanvas, RightSideBar } from '../../components';
+import {FC, useEffect, useMemo, useState} from 'react';
+import {BehaviorSubject} from 'rxjs';
+import {Button, FlexCell, Panel, Spinner} from '@epam/loveship';
+import {MapObjectType, useBookingDbRef} from '../../db';
+import {
+    DrawPolygonPlugin,
+    DrawRectanglePlugin,
+    MapPlugin,
+    MoveCanvasPlugin,
+    useForceUpdate,
+    ZoomPlugin
+} from '../../common';
+import {DrawMode, LeftSideBar, MapCanvas, RightSideBar} from '../../components';
 import css from './Map.module.scss';
 
 
@@ -16,27 +23,36 @@ const DrawModeToPlugin: { [key: string]: MapPlugin | null } = {
 };
 
 export interface MapProps {
-    mapId: number;
+    serverMapId: number;
     isEditMode: boolean;
 }
 
-export const Map: FC<MapProps> = ({ mapId, isEditMode }) => {
+export const Map: FC<MapProps> = ({ serverMapId, isEditMode }) => {
     const dbRef = useBookingDbRef();
+    const [mapId, setMapId] = useState<number>();
     const [mode, setMode] = useState<DrawMode>('pointer');
     const [showLeftPanel, setShowLeftPanel] = useState(true);
     const [forceResize, setForceResize] = useState(false);
     const forceUpdate = useForceUpdate();
     const [plugins, setPlugins] = useState<MapPlugin[]>(defaultMapPlugins);
-    const [selectedItemId] = useState(new BehaviorSubject<number | null>(mapId));
+    const [selectedItemId] = useState(new BehaviorSubject<number | null>(null));
 
-    const { isLoading } = dbRef.fetchMap();
+    const { isLoading, isLoaded } = dbRef.fetchMap(serverMapId);
+    
+    useEffect(() => {
+        if (isLoaded) {
+            const mapId = dbRef.idMap.serverToClient('mapObjects', serverMapId);
+            const map = dbRef.db.mapObjects.byId(mapId);
+            if (map.type === MapObjectType.MAP) {
+                setMapId(mapId);
+            }
+        }
+    }, [isLoaded]);
 
     const selectedItemProps = useMemo(() => ({ 
-            value: selectedItemId.value, 
-            onValueChange: (id: number | null) => selectedItemId.next(id),
-        }), 
-        [selectedItemId.value],
-    );
+        value: selectedItemId.value, 
+        onValueChange: (id: number | null) => selectedItemId.next(id),
+    }), [selectedItemId.value]);
 
     const modeProps = useMemo(() => ({
             value: mode,
@@ -56,11 +72,13 @@ export const Map: FC<MapProps> = ({ mapId, isEditMode }) => {
     );
 
     useEffect(() => {
+        if (!mapId) return;
+        
         const s = selectedItemId.subscribe((v) => {
             v === null ? selectedItemId.next(mapId) : forceUpdate();
         });
         return () => s.unsubscribe(); 
-    }, []);
+    }, [mapId]);
 
     useEffect(() => {
         setForceResize(true);
@@ -68,7 +86,7 @@ export const Map: FC<MapProps> = ({ mapId, isEditMode }) => {
     }, [showLeftPanel]);
 
 
-    if (isLoading) {
+    if (isLoading || !mapId) {
         return (
             <FlexCell grow={ 1 }>
                 <Spinner />

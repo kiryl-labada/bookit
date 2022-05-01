@@ -5,10 +5,10 @@ import {HeaderPanel} from '../../components/panels/HeaderPanel';
 import {Link} from '@epam/uui';
 import {useUrlState} from '../../common';
 
-function getTabLink(tab: MapPageTab): Link {
+function getTabLink(mapId: number, tab: MapPageTab): Link {
     return { 
         pathname: '/booking',
-        search: tab === MapPageTab.MAP ? '' : `?tab=${tab}`,
+        search: `?id=${mapId}` + (tab === MapPageTab.MAP ? '' : `&tab=${tab}`),
     };
 }
 
@@ -16,13 +16,12 @@ export const BookingPage: FC = () => {
     const dbRef = useBookingDbRef();
     const [params] = useUrlState<any>();
     const tab: MapPageTab = params.tab ?? MapPageTab.MAP;
+    const mapId: number = +params.id;
 
-    const mapId = dbRef.db.mapObjects.find({ type: MapObjectType.MAP }).one()?.id;
-    
     const Tab = () => {
         if (tab === MapPageTab.MAP || tab === MapPageTab.BUILDER) {
             return (
-                <Map key={ tab } mapId={ mapId } isEditMode={ tab === MapPageTab.BUILDER } />
+                <Map key={ tab } serverMapId={ mapId } isEditMode={ tab === MapPageTab.BUILDER } />
             )
         }
         
@@ -31,7 +30,7 @@ export const BookingPage: FC = () => {
 
     return (
         <div>
-            <HeaderPanel selectedTab={ tab } getTabLink={ getTabLink } />
+            <HeaderPanel selectedTab={ tab } getTabLink={ (t) => getTabLink(mapId, t) } />
             <div style={ { display: 'flex', flex: '1 1 auto', position: 'absolute', width: '100%', height: 'calc(100% - 96px)' } }>
                 { Tab() }
             </div>

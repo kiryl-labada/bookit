@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const getMapQuery = gql`
-    query getMap {
-        mapObjects {
+    query getMap($filter: InputMapObjectFilter) {
+        mapObjects(filter: $filter) {
             items {
                 id
                 name

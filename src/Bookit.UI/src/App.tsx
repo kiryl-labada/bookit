@@ -15,7 +15,7 @@ export const App = () => {
             <Route component={ AppHeader } />
             <main /*style={ { position: 'relative' } }*/>
                 <Route path="/" exact component={MainPage} />
-                <Route path="/booking" exact component={BookingPage} />
+                <Route path="/booking" component={BookingPage} />
                 <Route path="/catalog" component={CatalogPage} />
             </main>
             {/* <footer></footer> */}

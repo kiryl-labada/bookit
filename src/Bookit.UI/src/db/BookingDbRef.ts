@@ -106,8 +106,8 @@ export class BookingDbRef extends DbRef<BookingDbTables, BookingDb> {
         }).then((r) => r.data);
     }
 
-    public fetchMap() {
-        return this.fetchGQL(getMapQuery, {});
+    public fetchMap(id: number) {
+        return this.fetchGQL(getMapQuery, { filter: { or: [ { id: { eq: id } }, { mapId: { eq: id } } ] } });
     }
     
     public loadCatalogItems(filter?: { first?: number, after?: string, search?: string, sorting?: any, filter?: CatalogItemFilter }) {
