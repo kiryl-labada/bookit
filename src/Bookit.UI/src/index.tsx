@@ -7,22 +7,24 @@ import '@epam/loveship/styles.css';
 import '@epam/promo/styles.css';
 
 import { createBrowserHistory } from 'history';
-import { ContextProvider } from '@epam/uui';
+import { ContextProvider, CommonContexts as UuiCommonContext } from '@epam/uui';
 import { Snackbar, Modals } from '@epam/uui-components';
 import { DbContext } from '@epam/uui-db';
 import { ErrorHandler } from '@epam/loveship';
 import { App } from './App';
-import { svc } from './services';
-import { BookingDbRef, getApi } from './db';
+import { Api, svc } from './services';
+import { AppContext, BookingDbRef, getApi } from './db';
 
 const history = createBrowserHistory();
 const dbRef = new BookingDbRef();
 Object.assign(window, { dbRef });
+Object.assign(window, { svc });
 
 const UuiEnhancedApp = () => (
     <ContextProvider
         apiDefinition={ getApi }
-        onInitCompleted={(context) => {
+        loadAppContext={ (api) => api.loadAppContext() }
+        onInitCompleted={(context: UuiCommonContext<Api, AppContext>) => {
             Object.assign(svc, context);
             Object.assign(svc, { idMap: dbRef.idMap });
         }}

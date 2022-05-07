@@ -72,3 +72,11 @@ export enum MapPageTab {
 export interface CatalogItemFilter extends CompoundFilter<CatalogItemFilter> {
     userId?: InFilter<number>;
 }
+
+export interface AppContext {
+    user: {
+        id: string;
+        name: string;
+        email: string;
+    }
+}

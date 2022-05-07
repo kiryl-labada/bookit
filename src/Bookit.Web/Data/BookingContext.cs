@@ -1,11 +1,13 @@
 ﻿using Bookit.Web.Data.EntityConfigurations;
 using Bookit.Web.Data.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bookit.Web.Data;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-public class BookingContext : DbContext
+public class BookingContext : IdentityDbContext<UserProfile>
 {
     protected string Schema => "bookit";
 
@@ -27,6 +29,7 @@ public class BookingContext : DbContext
         modelBuilder.ApplyConfiguration(new TaskItemEntityTypConfiguration());
         modelBuilder.ApplyConfiguration(new MapObjectEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new MapObjectViewEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new UserProfileEntityTypeConfiguration());
     }
 }
 

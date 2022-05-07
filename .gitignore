@@ -1,5 +1,10 @@
 setup.ps1
 Tools/
+**/wwwroot/static/
+**/wwwroot/index.html
+**/wwwroot/favicon.ico
+**/wwwroot/manifest.json
+**/wwwroot/asset-manifest.json
 
 
 ## Ignore Visual Studio temporary files, build results, and

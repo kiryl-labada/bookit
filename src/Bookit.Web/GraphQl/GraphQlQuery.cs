@@ -1,4 +1,5 @@
 ﻿using Bookit.Web.GraphQl.Loaders;
+using Bookit.Web.GraphQl.Projections;
 using Epam.GraphQL;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,6 +14,9 @@ public class GraphQlQuery : Query<GraphQlContext>
 {
     protected override void OnConfigure()
     {
+        Field("appContext")
+            .Resolve(context => new object(), builder => builder.ConfigureFrom<AppContextProjection>());
+
         Connection<StoryLoader>("stories");
         Connection<TaskItemLoader>("tasks");
         Connection<MapObjectLoader>("mapObjects");

@@ -1,3 +1,4 @@
+import { AppContext } from './db/models';
 import { UuiContexts, ApiExtensions } from '@epam/uui';
 import { IClientIdsMap } from '@epam/uui-db';
 import { getApi } from './db/api';
@@ -7,6 +8,7 @@ export type Api = typeof tApi;
 
 export interface CommonContexts {
     api: Api & ApiExtensions<Api>;
+    uuiApp: AppContext;
     history: History;
     idMap: IClientIdsMap;
 }

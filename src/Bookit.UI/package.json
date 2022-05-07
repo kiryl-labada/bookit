@@ -36,7 +36,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && yarn copy-to-wwwroot",
+    "copy-to-wwwroot": "npx copyfiles -u 1 \"./build/**/*\" \"../Bookit.Web/wwwroot\"",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
