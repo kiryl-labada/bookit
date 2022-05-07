@@ -41,11 +41,18 @@ export enum StateType {
     Archived = 'Archived',
 }
 
+export enum InstanceType {
+    Draft = 'Draft',
+    Original = 'Original',
+}
+
 export interface MapObject {
     id: number;
     name: string | null;
     mapId: number | null;
     state: StateType;
+    instanceType: InstanceType;
+    prototypeId: number | null;
     type: MapObjectType;
     createdAt: Date;
     updatedAt: Date;

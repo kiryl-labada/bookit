@@ -1,3 +1,5 @@
+import { getMapInfoQuery } from './api/queries/getMapInfo';
+import { createMapMutation } from './api/mutations/createMap';
 import { DbRef, flattenResponse, DbPatch, useDbRef, DbSaveResponse } from '@epam/uui-db';
 import { DocumentNode } from 'graphql';
 import { print } from 'graphql/language/printer';
@@ -109,11 +111,22 @@ export class BookingDbRef extends DbRef<BookingDbTables, BookingDb> {
     public fetchMap(id: number) {
         return this.fetchGQL(getMapQuery, { filter: { or: [ { id: { eq: id } }, { mapId: { eq: id } } ] } });
     }
+
+    public fetchMapInfo(id: number) {
+        return this.fetchGQL(getMapInfoQuery, { filter: { id: { eq: id } } });
+    }
     
     public loadCatalogItems(filter?: { first?: number, after?: string, search?: string, sorting?: any, filter?: CatalogItemFilter }) {
         return this.loadGQL<{ catalogItems: Connection<MapObject> }>({ query: getCatalogItems, variables: filter }).then((res) => ({
             items: res.data!.catalogItems.items,
             count: res.data!.catalogItems.totalCount,
+        }));
+    }
+
+    public createMap(name: string, backgroundUrl: string) {
+        return this.mutateGQL(createMapMutation, { payload: { input: { name, backgroundUrl } } }).then((res) => ({
+            originalMapId: res.data.createMap.data.originalMapId,
+            draftMapId: res.data.createMap.data.draftMapId,
         }));
     }
 }

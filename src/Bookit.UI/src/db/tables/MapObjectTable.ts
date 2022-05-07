@@ -13,6 +13,12 @@ export const MapObjectTable = new DbTable<MapObject, number, BookingDbTables>({
                 relationType: DbRelationType.Association,
             },
         },
+        prototypeId: {
+            fk: {
+                tableName: 'mapObjects',
+                relationType: DbRelationType.Association,
+            }
+        },
         __typename: { isClientOnly: true },
     },
     primaryKey: 'id',

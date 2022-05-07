@@ -7,5 +7,5 @@ namespace Bookit.Web.GraphQl.Loaders;
 public class CatalogItemLoader : MapObjectLoader
 {
     protected override IQueryable<MapObject> GetBaseQuery(GraphQlContext context) 
-        => base.GetBaseQuery(context).Where(x => x.Type == MapObjectType.Map);
+        => base.GetBaseQuery(context).Where(x => x.Type == MapObjectType.Map && x.InstanceType == InstanceType.Original);
 }

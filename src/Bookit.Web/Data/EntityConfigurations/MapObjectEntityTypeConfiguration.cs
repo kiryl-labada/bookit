@@ -12,9 +12,13 @@ public class MapObjectEntityTypeConfiguration : IEntityTypeConfiguration<MapObje
 
         builder.Property(x => x.Name)
             .IsRequired();
-        
+
         builder.HasOne(x => x.MapObjectView)
             .WithOne(x => x.MapObject)
             .HasForeignKey<MapObjectView>(x => x.MapObjectId);
+
+        builder.HasOne(x => x.Prototype)
+            .WithOne(x => x.Instance)
+            .HasForeignKey<MapObject>(x => x.PrototypeId);
     }
 }

@@ -16,6 +16,7 @@ namespace Bookit.Web.Services
         public static void Setup(IServiceCollection services)
         {
             services.AddScoped<IUserContext>(UserContext.Resolve);
+            services.AddTransient<IMapService, MapService>();
         }
     }
 }

@@ -8,6 +8,8 @@ public class MapObject
     public int Id { get; set; }
     public string? Name { get; set; }
     public int? MapId { get; set; }
+    public int? PrototypeId { get; set; }
+    public InstanceType InstanceType { get; set; }
     public StateType State { get; set; }
     public MapObjectType Type { get; set; }
     public DateTime CreatedAt { get; set; }
@@ -15,4 +17,6 @@ public class MapObject
     public bool IsDeleted { get; set; }
 
     public MapObjectView? MapObjectView { get; set; }
+    public MapObject? Prototype { get; set; }
+    public MapObject? Instance { get; set; }
 }

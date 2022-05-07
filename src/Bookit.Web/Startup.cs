@@ -101,7 +101,7 @@ public class Startup
         app.UseAuthentication();
         app.UseAuthorization();
 
-        string[] bypass = { "/", "/auth/ping", "/Account/Login", "/Identity/Account/Login", "/Identity/Account/Logout", "/Identity/Account/Register", "/Identity/Account/RegisterConfirmation" };
+        string[] bypass = { "/", "/api/file/upload", "/auth/ping", "/Account/Login", "/Identity/Account/Login", "/Identity/Account/Logout", "/Identity/Account/Register", "/Identity/Account/RegisterConfirmation" };
         app.Use(async (context, next) =>
         {
             var path = context.Request.Path;

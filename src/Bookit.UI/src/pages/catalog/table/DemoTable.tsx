@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {cx, DataRowOptions, useLazyDataSource, useTableState} from "@epam/uui-core";
-import {LazyDataSourceApiRequest} from '@epam/uui';
-import {DataTable, FlexRow, Text} from '@epam/promo';
+import {FlexSpacer, LazyDataSourceApiRequest} from '@epam/uui';
+import {Button, DataTable, FlexRow, Text} from '@epam/promo';
 import css from './DemoTable.module.scss';
 import {getFilters} from './data';
 import {getColumns} from './columns';
@@ -11,6 +11,7 @@ import {SlidingPanel} from './SlidingPanel';
 import {FilterPanelOpener} from './FilterPanelOpener';
 import {svc} from "../../../services";
 import {MapObject, useBookingDbRef} from "../../../db";
+import { AddMapModal } from './AddMapModal';
 
 export const DemoTable: React.FC = () => {
     const dbRef = useBookingDbRef();
@@ -76,6 +77,11 @@ export const DemoTable: React.FC = () => {
                     cx={ cx(css.presets, { [css.presetsWithFilter]: isFilterPanelOpened }) }
                 >
                     <Text>Catalog</Text>
+                    <FlexSpacer />
+                    <Button 
+                        caption='Add Map'
+                        onClick={ () => svc.uuiModals.show((props) => <AddMapModal { ...props } />) }
+                    />
                 </FlexRow>
                 
                 <DataTable

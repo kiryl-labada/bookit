@@ -1,5 +1,5 @@
 import { getTempId } from '@epam/uui-db';
-import { MapObject, MapObjectType, MapObjectView, StateType } from '../models';
+import { InstanceType, MapObject, MapObjectType, MapObjectView, StateType } from '../models';
 import { Action } from './common';
 
 
@@ -10,6 +10,8 @@ const createMapObject: Action<{ mapId: number, structure: string }> = ({ mapId, 
     const mapObject: MapObject = {
         id: getTempId(), 
         name: 'New map object',
+        prototypeId: null,
+        instanceType: InstanceType.Draft,
         state: StateType.Draft,
         type: MapObjectType.PLACE,
         mapId: mapId,
