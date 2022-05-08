@@ -1,26 +1,13 @@
 import { gql } from '@apollo/client';
+import { baseMapObjectFragment } from '../fragments';
 
 export const getMapQuery = gql`
     query getMap($filter: InputMapObjectFilter) {
         mapObjects(filter: $filter) {
             items {
-                id
-                name
-                mapId
-                state
-                type
-                createdAt
-                updatedAt
-                isDeleted
-                view {
-                    id
-                    backgroundUrl
-                    structure
-                    createdAt
-                    updatedAt
-                    mapObjectId
-                }
+                ...baseMapObjectFragment
             }
         }
     }
+    ${baseMapObjectFragment}
 `;

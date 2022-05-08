@@ -36,14 +36,14 @@ export enum MapObjectType {
 }
 
 export enum StateType {
-    Draft = 'Draft',
-    Published = 'Published',
-    Archived = 'Archived',
+    DRAFT = 'DRAFT',
+    PUBLISHED = 'PUBLISHED',
+    ARCHIVED = 'ARCHIVED',
 }
 
 export enum InstanceType {
-    Draft = 'Draft',
-    Original = 'Original',
+    DRAFT = 'DRAFT',
+    ORIGINAL = 'ORIGINAL',
 }
 
 export interface MapObject {

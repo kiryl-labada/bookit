@@ -17,5 +17,9 @@ public class GraphQlMutation : Mutation<GraphQlContext>
         Field("createMap")
             .PayloadField<CreateMapInput>("input")
             .Resolve((context, input) => context.MapService.CreateMapAsync(input));
+
+        Field("publish")
+            .PayloadField<int>("mapId")
+            .Resolve((context, mapId) => context.MapService.PublishAsync(mapId));
     }
 }

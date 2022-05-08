@@ -7,4 +7,5 @@ namespace Bookit.Web.Services;
 public interface IMapService
 {
     Task<MutationResult<CreateMapResponse>> CreateMapAsync(CreateMapInput input);
+    Task<MutationResult<StatusResponse>> PublishAsync(int mapId);
 }

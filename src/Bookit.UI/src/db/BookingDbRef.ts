@@ -1,3 +1,4 @@
+import { publishMutation } from './api/mutations/publish';
 import { getMapInfoQuery } from './api/queries/getMapInfo';
 import { createMapMutation } from './api/mutations/createMap';
 import { DbRef, flattenResponse, DbPatch, useDbRef, DbSaveResponse } from '@epam/uui-db';
@@ -128,6 +129,10 @@ export class BookingDbRef extends DbRef<BookingDbTables, BookingDb> {
             originalMapId: res.data.createMap.data.originalMapId,
             draftMapId: res.data.createMap.data.draftMapId,
         }));
+    }
+
+    public publish(mapId: number) {
+        return this.mutateGQL(publishMutation, { payload: { mapId } });
     }
 }
 
