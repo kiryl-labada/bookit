@@ -13,6 +13,7 @@ public class MapObject
     public InstanceType InstanceType { get; set; }
     public StateType State { get; set; }
     public MapObjectType Type { get; set; }
+    public string? CreatedById { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     public bool IsDeleted { get; set; }
@@ -21,4 +22,7 @@ public class MapObject
     public MapObject? Prototype { get; set; }
     public MapObject? Instance { get; set; }
     public ICollection<Slot> Slots { get; set; } = new List<Slot>();
+    public UserProfile? CreatedBy { get; set; }
+    public MapObject? Parent { get; set; }
+    public ICollection<MapObject> Children { get; set; } = new List<MapObject>();
 }

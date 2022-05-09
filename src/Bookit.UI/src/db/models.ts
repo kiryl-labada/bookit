@@ -57,6 +57,7 @@ export interface MapObject {
     createdAt: Date;
     updatedAt: Date;
     isDeleted: boolean;
+    isAdmin: boolean;
     __typename?: 'MapObject';
 }
 
@@ -88,10 +89,16 @@ export interface AppContext {
     }
 }
 
+export enum SlotStatus {
+    AVAILABLE = 'AVAILABLE',
+    BOOKED = 'BOOKED',
+}
+
 export interface Slot {
     id: number;
     from: Date;
     to: Date;
+    status: SlotStatus;
     mapObjectId: number;
     bookedById: string | null;
     __typename?: 'Slot';

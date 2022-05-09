@@ -20,5 +20,13 @@ public class MapObjectEntityTypeConfiguration : IEntityTypeConfiguration<MapObje
         builder.HasOne(x => x.Prototype)
             .WithOne(x => x.Instance)
             .HasForeignKey<MapObject>(x => x.PrototypeId);
+
+        builder.HasOne(x => x.CreatedBy)
+            .WithMany()
+            .HasForeignKey(x => x.CreatedById);
+
+        builder.HasOne(x => x.Parent)
+            .WithMany(x => x.Children)
+            .HasForeignKey(x => x.MapId);
     }
 }

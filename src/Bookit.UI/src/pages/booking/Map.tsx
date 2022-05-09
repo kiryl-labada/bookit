@@ -27,9 +27,10 @@ const DrawModeToPlugin: { [key: string]: MapPlugin | null } = {
 export interface MapProps {
     serverMapId: number;
     isEditMode: boolean;
+    isAdmin: boolean;
 }
 
-export const Map: FC<MapProps> = ({ serverMapId, isEditMode }) => {
+export const Map: FC<MapProps> = ({ serverMapId, isEditMode, isAdmin }) => {
     const dbRef = useBookingDbRef();
     const [mapId, setMapId] = useState<number>();
     const day = useValue<dayjs.Dayjs>(dayjs().startOf('day'));
@@ -125,7 +126,15 @@ export const Map: FC<MapProps> = ({ serverMapId, isEditMode }) => {
                 <Panel background='night50' rawProps={ { style: { height: '100%' } } } >
                     <Button caption='Hide' onClick={ () => setShowLeftPanel(false) } />
                     <Button caption='Show' onClick={ () => setShowLeftPanel(true) } />
-                    { selectedItemId.value && <RightSideBar dbRef={ dbRef } selectedItemId={ selectedItemId.value } selectedDay={ day.value } /> }
+                    { selectedItemId.value && (
+                        <RightSideBar 
+                            dbRef={ dbRef } 
+                            selectedItemId={ selectedItemId.value } 
+                            selectedDay={ day.value } 
+                            isAdmin={ isAdmin } 
+                            isEditMode={ isEditMode }
+                        />
+                    ) }
                 </Panel>
             </FlexCell>
         </>

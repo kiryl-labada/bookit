@@ -14,10 +14,12 @@ namespace Bookit.Web.Services.Implementation;
 public class MapService : IMapService
 {
     private readonly BookingContext _bookingContext;
+    private readonly IUserContext _userContext;
 
-    public MapService(BookingContext bookingContext)
+    public MapService(BookingContext bookingContext, IUserContext userContext)
     {
         _bookingContext = bookingContext;
+        _userContext = userContext;
     }
 
     public async Task<MutationResult<CreateMapResponse>> CreateMapAsync(CreateMapInput input)
@@ -143,6 +145,7 @@ public class MapService : IMapService
             UpdatedAt = now,
             State = StateType.Draft,
             Type = MapObjectType.Map,
+            CreatedById = _userContext.Id,
             IsDeleted = false,
             MapObjectView = new MapObjectView
             {

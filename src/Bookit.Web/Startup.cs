@@ -44,7 +44,7 @@ public class Startup
 
         services.AddDefaultIdentity<UserProfile>(options =>
             {
-                options.SignIn.RequireConfirmedAccount = true;
+                options.SignIn.RequireConfirmedAccount = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
             })

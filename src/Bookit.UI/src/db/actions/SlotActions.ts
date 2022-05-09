@@ -1,3 +1,4 @@
+import { SlotStatus } from './../models';
 import { getTempId } from '@epam/uui-db';
 import { Slot } from '../models';
 import { Action } from './common';
@@ -7,6 +8,7 @@ const createSlot: Action<{ mapObjectId: number, from: Date, to: Date }> = ({ map
         id: getTempId(),
         from,
         to,
+        status: SlotStatus.AVAILABLE,
         mapObjectId,
         bookedById: null,
     };

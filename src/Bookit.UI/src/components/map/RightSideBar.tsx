@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import { useDbView } from '@epam/uui-db';
 import { TimePickerValue, IEditable } from '@epam/uui-core';
-import { Avatar, FlexCell, IconButton, LabeledInput, Panel, TextInput, Text, Button, Spinner, FlexRow, TimePicker } from '@epam/loveship';
+import { Avatar, FlexCell, IconButton, LabeledInput, Panel, TextInput, Text, Button, Spinner, FlexRow, TimePicker, FlexSpacer } from '@epam/loveship';
 import dayjs from 'dayjs';
-import { BookingDb, BookingDbRef, InstanceType, MapObjectType } from '../../db';
+import { BookingDb, BookingDbRef, InstanceType, MapObjectType, SlotStatus } from '../../db';
 import css from './RightSideBar.module.scss';
 import { svc } from '../../services';
 import { useValue } from '../../common';
@@ -16,7 +16,7 @@ const RangeTimePicker: FC<{ from: IEditable<TimePickerValue | null>, to: IEditab
     const isInvalid = !isValid(from.value, to.value);
     return (
         <LabeledInput isInvalid={ isInvalid } validationMessage={ isInvalid ? 'From time should be before To' : undefined }>
-            <FlexRow padding='12' vPadding='24'>
+            <FlexRow>
                 <TimePicker
                     value={ from.value! }
                     onValueChange={ from.onValueChange }
@@ -33,7 +33,9 @@ const RangeTimePicker: FC<{ from: IEditable<TimePickerValue | null>, to: IEditab
     );
 }
 
-export const RightSideBar: FC<{ dbRef: BookingDbRef, selectedItemId: number, selectedDay: dayjs.Dayjs }> = ({dbRef, selectedItemId, selectedDay}) => {
+export const RightSideBar: FC<{ dbRef: BookingDbRef, selectedItemId: number, selectedDay: dayjs.Dayjs, isEditMode: boolean, isAdmin: boolean }> = ({
+    dbRef, selectedItemId, selectedDay, isEditMode, isAdmin,
+}) => {
     const fromProps = useValue<TimePickerValue | null>(null);
     const toProps = useValue<TimePickerValue | null>(null);
 
@@ -89,10 +91,23 @@ export const RightSideBar: FC<{ dbRef: BookingDbRef, selectedItemId: number, sel
 
         return (
             <>
-                <RangeTimePicker from={ fromProps } to={ toProps } />
-                <Button caption="Create slot" onClick={ createSlot } isDisabled={ isInvalid } />
+                { isAdmin && (
+                    <FlexCell>
+                        <RangeTimePicker from={ fromProps } to={ toProps } />
+                        <Button caption="Create slot" onClick={ createSlot } isDisabled={ isInvalid } />
+                    </FlexCell> 
+                ) }
                 <FlexCell>
-                    { slots.map((slot) => <Text key={slot.id}>{ `${dayjs(slot.from).format('HH-mm')} - ${dayjs(slot.to).format('HH-mm')}` }</Text>) }
+                    { slots.map((slot) => (
+                        <FlexRow>
+                            <Text key={slot.id}>{ `${dayjs(slot.from).format('HH-mm')} - ${dayjs(slot.to).format('HH-mm')}` }</Text>
+                            <FlexSpacer />
+                            { slot.status === SlotStatus.AVAILABLE 
+                                ? <Button caption='Book' onClick={ () => dbRef.bookPlace(dbRef.idMap.clientToServer(slot.id)) } />
+                                : <Text>Booked</Text>
+                            }
+                        </FlexRow>
+                    ))}
                 </FlexCell>
             </>
         );
@@ -104,6 +119,7 @@ export const RightSideBar: FC<{ dbRef: BookingDbRef, selectedItemId: number, sel
                 <TextInput 
                     value={ selectedItem.name || '' }
                     onValueChange={ (value: string) => dbRef.actions.updateMapObject({ id: selectedItemId, name: value }) }
+                    isDisabled={ !isEditMode }
                 />
 
                 <Text>External id: { dbRef.idMap.clientToServer(selectedItem.id) }</Text>

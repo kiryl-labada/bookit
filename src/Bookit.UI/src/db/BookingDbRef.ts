@@ -1,18 +1,15 @@
-import { getSlotsQuery } from './api/queries/getSlots';
-import { publishMutation } from './api/mutations/publish';
-import { getMapInfoQuery } from './api/queries/getMapInfo';
-import { createMapMutation } from './api/mutations/createMap';
+import { getMapInfoQuery, getSlotsQuery, getMapQuery } from './api/queries';
+import { createMapMutation, publishMutation, bookPlaceMutation } from './api/mutations';
 import { DbRef, flattenResponse, DbPatch, useDbRef, DbSaveResponse } from '@epam/uui-db';
 import { DocumentNode } from 'graphql';
 import { print } from 'graphql/language/printer';
-import {FetchResult, QueryOptions} from '@apollo/client';
+import { FetchResult, QueryOptions } from '@apollo/client';
 import { addTypenameToDocument } from '@apollo/client/utilities';
 import { blankBookingDb, BookingDb, BookingDbTables } from './BookingDb';
 import { svc } from '../services';
-import {getCatalogItems, patchMutation} from './api';
+import { getCatalogItems, patchMutation } from './api';
 import { bindActionSet, bookingActions, BookingActions } from './actions';
-import { getMapQuery } from './api/queries/getMap';
-import {CatalogItemFilter, Connection, MapObject} from "./models";
+import { CatalogItemFilter, Connection, MapObject } from "./models";
 
 export interface FetchState {
     isLoading: boolean;
@@ -144,6 +141,10 @@ export class BookingDbRef extends DbRef<BookingDbTables, BookingDb> {
                 to: { lte: to },
             }
         });
+    }
+
+    public bookPlace(placeId: number) {
+        return this.mutateGQL(bookPlaceMutation, { payload: { placeId } });
     }
 }
 

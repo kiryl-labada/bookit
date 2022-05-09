@@ -7,7 +7,7 @@ const updateMapObject: Action<Partial<MapObject>> = (patch) => (db) => ({ mapObj
 
 const createMapObject: Action<{ mapId: number, structure: string }> = ({ mapId, structure}) => (db) => {
     const now = new Date();
-    const mapObject: MapObject = {
+    const mapObject: Partial<MapObject> = {
         id: getTempId(), 
         name: 'New map object',
         prototypeId: null,
@@ -26,8 +26,10 @@ const createMapObject: Action<{ mapId: number, structure: string }> = ({ mapId, 
         structure,
         createdAt: now,
         updatedAt: now,
-        mapObjectId: mapObject.id,
+        mapObjectId: mapObject.id!,
     };
+
+    console.log('createMapObjectAction', mapObject);
 
     return { mapObjects: [mapObject], mapObjectViews: [mapObjectView] };
 };

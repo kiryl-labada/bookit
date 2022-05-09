@@ -1,8 +1,12 @@
-﻿using Bookit.Web.Data.Models;
+﻿using Bookit.Web.Data.Enums;
+using Bookit.Web.Data.Models;
+using Epam.GraphQL;
 using Epam.GraphQL.Loaders;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace Bookit.Web.GraphQl.Loaders;
 
@@ -23,6 +27,7 @@ public class MapObjectLoader : MutableLoader<MapObject, int, GraphQlContext>
         Field(x => x.InstanceType);
         Field(x => x.PrototypeId);
         Field(x => x.Type);
+        Field(x => x.CreatedById);
         Field(x => x.CreatedAt).Sortable();
         Field(x => x.UpdatedAt).Sortable();
         Field(x => x.IsDeleted).Editable().Filterable();
@@ -39,10 +44,34 @@ public class MapObjectLoader : MutableLoader<MapObject, int, GraphQlContext>
         Field("slots")
             .FromLoader<SlotLoader, Slot>((mapObject, slot) => mapObject.Id == slot.MapObjectId)
             .AsConnection();
+
+        Field("isAdmin")
+            .FromBatch((context, mapObjects) =>
+            {
+                return mapObjects.ToDictionary(x => x, x => x.CreatedById == context.UserContext.Id);
+            });
+    }
+
+    protected override IQueryable<MapObject> ApplySecurityFilter(GraphQlContext context, IQueryable<MapObject> query)
+    {
+        var currentUserId = context.UserContext.Id;
+        return query.Where(x => x.InstanceType != InstanceType.Draft || x.CreatedById == currentUserId);
+    }
+
+    protected override Task<bool> CanSaveAsync(IExecutionContextAccessor<GraphQlContext> context, MapObject entity, bool isNew)
+    {
+        if (!isNew)
+        {
+            return base.CanSaveAsync(context, entity, isNew);
+        }
+
+        var currentUserId = context.UserContext.UserContext.Id;
+        return context.UserContext.BookingContext.MapObjects.AnyAsync(x => x.Id == entity.MapId && x.CreatedById == currentUserId);
     }
 
     protected override void BeforeCreate(GraphQlContext context, MapObject entity)
     {
+        entity.CreatedById = context.UserContext.Id;
         entity.CreatedAt = DateTime.UtcNow;
         entity.UpdatedAt = DateTime.UtcNow;
     }

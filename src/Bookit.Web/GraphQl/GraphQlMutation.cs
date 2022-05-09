@@ -22,5 +22,9 @@ public class GraphQlMutation : Mutation<GraphQlContext>
         Field("publish")
             .PayloadField<int>("mapId")
             .Resolve((context, mapId) => context.MapService.PublishAsync(mapId));
+
+        Field("book")
+            .PayloadField<int>("placeId")
+            .Resolve((context, placeId) => context.BookingService.BookPlaceAsync(placeId));
     }
 }

@@ -9,6 +9,7 @@ export const getMapInfoQuery = gql`
                 instanceType
                 state
                 prototypeId
+                isAdmin
                 prototype {
                     id
                     instanceType

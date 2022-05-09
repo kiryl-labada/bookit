@@ -20,6 +20,7 @@ public class SlotLoader : MutableLoader<Slot, int, GraphQlContext>
         Field(x => x.Id).Filterable();
         Field(x => x.From).Filterable().Sortable();
         Field(x => x.To).Filterable();
+        Field(x => x.Status).Editable().Filterable();
         Field(x => x.MapObjectId).Filterable();
         Field(x => x.BookedById);
         Field("mapObject")

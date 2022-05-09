@@ -17,6 +17,7 @@ namespace Bookit.Web.Services
         {
             services.AddScoped<IUserContext>(UserContext.Resolve);
             services.AddTransient<IMapService, MapService>();
+            services.AddTransient<IBookingService, BookingService>();
         }
     }
 }

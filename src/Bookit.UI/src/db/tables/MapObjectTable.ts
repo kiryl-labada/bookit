@@ -19,6 +19,7 @@ export const MapObjectTable = new DbTable<MapObject, number, BookingDbTables>({
                 relationType: DbRelationType.Association,
             }
         },
+        isAdmin: { isClientOnly: true },
         __typename: { isClientOnly: true },
     },
     primaryKey: 'id',

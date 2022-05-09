@@ -1,4 +1,4 @@
-import { useEffect, useState, FC, useMemo } from 'react';
+import { FC, useMemo } from 'react';
 import { FlexRow, TabButton } from '@epam/loveship';
 import { Link } from '@epam/uui';
 import { MapPageTab } from '../../db';
@@ -6,14 +6,12 @@ import { FlexSpacer } from '@epam/uui-components';
 import css from './HeaderPanel.module.scss';
 
 export interface HeaderPanelProps {
-    tabs?: MapPageTab[];
+    tabs: MapPageTab[];
     selectedTab: MapPageTab;
     getTabLink: (tab: MapPageTab) => Link;
 }
 
-const defaultTabs = [MapPageTab.MAP, MapPageTab.DASHBOARD, MapPageTab.BUILDER]
-
-export const HeaderPanel: FC<HeaderPanelProps> = ({ selectedTab, tabs = defaultTabs, getTabLink }) => {
+export const HeaderPanel: FC<HeaderPanelProps> = ({ selectedTab, tabs, getTabLink }) => {
     const mapTabs: { [key in MapPageTab]: { id: MapPageTab, name: string } } = useMemo(() => ({
         MAP: { id: MapPageTab.MAP, name: 'Map' },
         BUILDER: { id: MapPageTab.BUILDER, name: 'Builder' },

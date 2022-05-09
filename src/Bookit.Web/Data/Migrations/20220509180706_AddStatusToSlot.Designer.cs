@@ -3,6 +3,7 @@ using System;
 using Bookit.Web.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bookit.Web.Data.Migrations
 {
     [DbContext(typeof(BookingContext))]
-    partial class BookingContextModelSnapshot : ModelSnapshot
+    [Migration("20220509180706_AddStatusToSlot")]
+    partial class AddStatusToSlot
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,8 +67,6 @@ namespace Bookit.Web.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
-
-                    b.HasIndex("MapId");
 
                     b.HasIndex("PrototypeId")
                         .IsUnique();
@@ -395,17 +395,11 @@ namespace Bookit.Web.Data.Migrations
                         .WithMany()
                         .HasForeignKey("CreatedById");
 
-                    b.HasOne("Bookit.Web.Data.Models.MapObject", "Parent")
-                        .WithMany("Children")
-                        .HasForeignKey("MapId");
-
                     b.HasOne("Bookit.Web.Data.Models.MapObject", "Prototype")
                         .WithOne("Instance")
                         .HasForeignKey("Bookit.Web.Data.Models.MapObject", "PrototypeId");
 
                     b.Navigation("CreatedBy");
-
-                    b.Navigation("Parent");
 
                     b.Navigation("Prototype");
                 });
@@ -502,8 +496,6 @@ namespace Bookit.Web.Data.Migrations
 
             modelBuilder.Entity("Bookit.Web.Data.Models.MapObject", b =>
                 {
-                    b.Navigation("Children");
-
                     b.Navigation("Instance");
 
                     b.Navigation("MapObjectView");
