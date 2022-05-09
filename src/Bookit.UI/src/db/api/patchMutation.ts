@@ -27,6 +27,16 @@ export const patchMutation = gql`
                     mapObjectId
                 }
             }
+            slots {
+                id
+                payload {
+                    id
+                    from
+                    to
+                    mapObjectId
+                    bookedById
+                }
+            }
         }
     }
 `;

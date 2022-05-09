@@ -13,5 +13,7 @@ namespace Bookit.Web.Data.Models
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; }
+
+        public ICollection<Slot> Slots { get; set; } = new List<Slot>();
     }
 }

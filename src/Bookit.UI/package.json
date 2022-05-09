@@ -22,6 +22,7 @@
     "@types/react-router-dom": "5.1.7",
     "apollo-client": "^2.6.10",
     "dart-sass": "1.25.0",
+    "dayjs": "^1.11.2",
     "fabric": "^4.6.0",
     "graphql": "^16.2.0",
     "history": "4.10.1",

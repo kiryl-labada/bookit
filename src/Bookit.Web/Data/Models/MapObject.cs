@@ -1,5 +1,6 @@
 ﻿using Bookit.Web.Data.Enums;
 using System;
+using System.Collections.Generic;
 
 namespace Bookit.Web.Data.Models;
 
@@ -19,4 +20,5 @@ public class MapObject
     public MapObjectView? MapObjectView { get; set; }
     public MapObject? Prototype { get; set; }
     public MapObject? Instance { get; set; }
+    public ICollection<Slot> Slots { get; set; } = new List<Slot>();
 }

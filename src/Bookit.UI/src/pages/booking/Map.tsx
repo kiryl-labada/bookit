@@ -8,10 +8,12 @@ import {
     MapPlugin,
     MoveCanvasPlugin,
     useForceUpdate,
+    useValue,
     ZoomPlugin
 } from '../../common';
 import {DrawMode, LeftSideBar, MapCanvas, RightSideBar} from '../../components';
 import css from './Map.module.scss';
+import dayjs from 'dayjs';
 
 
 const defaultMapPlugins: MapPlugin[] = [new MoveCanvasPlugin(), new ZoomPlugin()];
@@ -30,6 +32,7 @@ export interface MapProps {
 export const Map: FC<MapProps> = ({ serverMapId, isEditMode }) => {
     const dbRef = useBookingDbRef();
     const [mapId, setMapId] = useState<number>();
+    const day = useValue<dayjs.Dayjs>(dayjs().startOf('day'));
     const [mode, setMode] = useState<DrawMode>('pointer');
     const [showLeftPanel, setShowLeftPanel] = useState(true);
     const [forceResize, setForceResize] = useState(false);
@@ -98,10 +101,12 @@ export const Map: FC<MapProps> = ({ serverMapId, isEditMode }) => {
         <>
             <div style={ { flexBasis: 250, flexShrink: 0, marginLeft: !showLeftPanel ? -250 : undefined } } className={ css.sidebar } >
                 <Panel background='night50' rawProps={ { style: { height: '100%' } } } >
-                    <LeftSideBar 
+                    <LeftSideBar
                         mapId={ mapId } 
                         selectedItemId={ selectedItemProps }
                         mode={ modeProps }
+                        day={ day }
+                        isEditMode={ isEditMode }
                     />
                 </Panel>
             </div>
@@ -120,7 +125,7 @@ export const Map: FC<MapProps> = ({ serverMapId, isEditMode }) => {
                 <Panel background='night50' rawProps={ { style: { height: '100%' } } } >
                     <Button caption='Hide' onClick={ () => setShowLeftPanel(false) } />
                     <Button caption='Show' onClick={ () => setShowLeftPanel(true) } />
-                    { selectedItemId.value && <RightSideBar dbRef={ dbRef } selectedItemId={ selectedItemId.value } /> }
+                    { selectedItemId.value && <RightSideBar dbRef={ dbRef } selectedItemId={ selectedItemId.value } selectedDay={ day.value } /> }
                 </Panel>
             </FlexCell>
         </>

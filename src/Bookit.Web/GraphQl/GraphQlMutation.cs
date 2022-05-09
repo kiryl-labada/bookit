@@ -13,6 +13,7 @@ public class GraphQlMutation : Mutation<GraphQlContext>
         SubmitField<TaskItemLoader, TaskItem>("tasks");
         SubmitField<MapObjectLoader, MapObject>("mapObjects");
         SubmitField<MapObjectViewLoader, MapObjectView>("mapObjectViews");
+        SubmitField<SlotLoader, Slot>("slots");
 
         Field("createMap")
             .PayloadField<CreateMapInput>("input")

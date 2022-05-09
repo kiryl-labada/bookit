@@ -1,13 +1,14 @@
 import { FC } from 'react';
 import { Icon, IEditable } from '@epam/uui';
 import { useDbView } from '@epam/uui-db';
-import { FlexCell, FlexRow, IconButton, IconContainer, Panel, Text } from '@epam/loveship';
+import { DatePicker, FlexCell, FlexRow, IconButton, IconContainer, Panel, Text } from '@epam/loveship';
 import { getMapView } from '../../common';
 import { MapObjectType } from '../../db';
 import { ReactComponent as mapIcon } from '../../assets/icons/map-icon.svg';
 import { ReactComponent as itemIcon } from '../../assets/icons/item-icon.svg';
 import { ReactComponent as rectIcon } from '../../assets/icons/rect-icon.svg';
 import { ReactComponent as arrowIcon } from '../../assets/icons/arrow-icon.svg';
+import dayjs from 'dayjs';
 
 export type DrawMode = 'pointer' | 'rect' | 'move' | 'polygon';
 
@@ -15,9 +16,11 @@ export interface LeftSideBarProps {
     mapId: number;
     selectedItemId: IEditable<number | null>; 
     mode: IEditable<DrawMode>;
+    day: IEditable<dayjs.Dayjs>;
+    isEditMode: boolean;
 }
 
-export const LeftSideBar: FC<LeftSideBarProps> = ({ mapId, selectedItemId, mode}) => {
+export const LeftSideBar: FC<LeftSideBarProps> = ({ mapId, selectedItemId, mode, isEditMode, day }) => {
     const map = useDbView(getMapView, { mapId });
 
     const spacer = <div style={ { width: 8 } }></div>;
@@ -34,9 +37,16 @@ export const LeftSideBar: FC<LeftSideBarProps> = ({ mapId, selectedItemId, mode}
         );
     };
 
+    const updateDay = (v: string) => {
+        day.onValueChange((v ? dayjs(v) : dayjs()).startOf('day'));
+    } 
+
     return (
         <Panel>
-            <Toolbar mode={mode} />
+            { isEditMode && <Toolbar mode={mode} /> }
+            { !isEditMode && (
+                <DatePicker value={day.value.toISOString()} onValueChange={ updateDay } format='MMM D, YYYY' />
+            ) }
             <FlexCell>
                 { renderItem(map) }
                 { map.children.map((x) => renderItem(x)) }

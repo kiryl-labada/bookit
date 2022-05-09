@@ -87,3 +87,12 @@ export interface AppContext {
         email: string;
     }
 }
+
+export interface Slot {
+    id: number;
+    from: Date;
+    to: Date;
+    mapObjectId: number;
+    bookedById: string | null;
+    __typename?: 'Slot';
+}

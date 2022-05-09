@@ -1,3 +1,4 @@
+import { getSlotsQuery } from './api/queries/getSlots';
 import { publishMutation } from './api/mutations/publish';
 import { getMapInfoQuery } from './api/queries/getMapInfo';
 import { createMapMutation } from './api/mutations/createMap';
@@ -133,6 +134,16 @@ export class BookingDbRef extends DbRef<BookingDbTables, BookingDb> {
 
     public publish(mapId: number) {
         return this.mutateGQL(publishMutation, { payload: { mapId } });
+    }
+
+    public fetchSlots(mapObjectId: number, from: string, to: string) {
+        return this.fetchGQL(getSlotsQuery, { 
+            filter: {
+                mapObjectId: { eq: mapObjectId },
+                from: { gte: from },
+                to: { lte: to },
+            }
+        });
     }
 }
 

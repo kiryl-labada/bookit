@@ -15,6 +15,7 @@ public class BookingContext : IdentityDbContext<UserProfile>
     public DbSet<Story> Stories { get; set; }
     public DbSet<MapObject> MapObjects { get; set; }
     public DbSet<MapObjectView> MapObjectViews { get; set; }
+    public DbSet<Slot> Slots { get; set; }
 
     public BookingContext(DbContextOptions<BookingContext> options) : base(options)
     {
@@ -30,6 +31,7 @@ public class BookingContext : IdentityDbContext<UserProfile>
         modelBuilder.ApplyConfiguration(new MapObjectEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new MapObjectViewEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new UserProfileEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new SlotEntityTypeConfiguration());
     }
 }
 

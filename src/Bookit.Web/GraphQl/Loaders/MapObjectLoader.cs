@@ -35,6 +35,10 @@ public class MapObjectLoader : MutableLoader<MapObject, int, GraphQlContext>
             .FromLoader<MapObjectLoader, MapObject>(
                 (original, draft) => original.PrototypeId == draft.Id)
             .SingleOrDefault();
+
+        Field("slots")
+            .FromLoader<SlotLoader, Slot>((mapObject, slot) => mapObject.Id == slot.MapObjectId)
+            .AsConnection();
     }
 
     protected override void BeforeCreate(GraphQlContext context, MapObject entity)
