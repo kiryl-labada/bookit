@@ -5,6 +5,7 @@ query AppContext {
             id
             name
             email
+            clientOrgId
         }
     }
 }

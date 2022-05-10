@@ -11,5 +11,6 @@ namespace Bookit.Web.Services
         string? Id { get; }
         string Name { get; }
         string Email { get; }
+        int? ClientOrgId { get; }
     }
 }

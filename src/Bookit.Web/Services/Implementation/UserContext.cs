@@ -2,34 +2,34 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Bookit.Web.Services.Implementation
+namespace Bookit.Web.Services.Implementation;
+
+public class UserContext : IUserContext
 {
-    public class UserContext : IUserContext
+    public string? Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Email { get; set; } = string.Empty;
+    public int? ClientOrgId { get; set; }
+
+
+    public static UserContext Resolve(IServiceProvider sp)
     {
-        public string? Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
+        var httpContext = sp.GetRequiredService<IHttpContextAccessor>().HttpContext;
+        var dbContext = sp.GetRequiredService<BookingContext>();
 
+        var userId = httpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var user = dbContext.Users.Single(u => u.Id == userId);
+        var clientOrg = dbContext.ClientOrgs.SingleOrDefault(x => x.OwnerId == user.Id);
 
-        public static UserContext Resolve(IServiceProvider sp)
+        return new UserContext
         {
-            var httpContext = sp.GetRequiredService<IHttpContextAccessor>().HttpContext;
-            var dbContext = sp.GetRequiredService<BookingContext>();
-
-            var userId = httpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var user = dbContext.Users.SingleOrDefault(u => u.Id == userId);
-            return new UserContext
-            {
-                Id = user?.Id,
-                Name = user?.UserName ?? string.Empty,
-                Email = user?.Email ?? string.Empty,
-            };
-        }
+            Id = user?.Id,
+            Name = user?.UserName ?? string.Empty,
+            Email = user?.Email ?? string.Empty,
+            ClientOrgId = clientOrg?.Id,
+        };
     }
 }

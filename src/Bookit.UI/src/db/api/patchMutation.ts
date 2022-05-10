@@ -37,6 +37,14 @@ export const patchMutation = gql`
                     bookedById
                 }
             }
+            clientOrgs {
+                id
+                payload {
+                    id
+                    name
+                    confirmUrl
+                }
+            }
         }
     }
 `;

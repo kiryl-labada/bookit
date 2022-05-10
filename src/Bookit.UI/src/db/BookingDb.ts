@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 import { DbTable, Db } from '@epam/uui-db';
 import * as models from './models';
-import { StoryTable, MapObjectTable, MapObjectViewTable, SlotTable } from './tables';
+import { StoryTable, MapObjectTable, MapObjectViewTable, SlotTable, ClientOrgTable } from './tables';
 
 
 export type BookingDbTables = {
@@ -9,6 +9,7 @@ export type BookingDbTables = {
     mapObjects: DbTable<models.MapObject, number, BookingDbTables>;
     mapObjectViews: DbTable<models.MapObjectView, number, BookingDbTables>;
     slots: DbTable<models.Slot, number, BookingDbTables>;
+    clientOrgs: DbTable<models.ClientOrg, number, BookingDbTables>;
 }
 
 export const bookingDbTables: BookingDbTables = {
@@ -16,6 +17,7 @@ export const bookingDbTables: BookingDbTables = {
     mapObjects: MapObjectTable,
     mapObjectViews: MapObjectViewTable,
     slots: SlotTable,
+    clientOrgs: ClientOrgTable
 };
 
 export class BookingDb extends Db<BookingDbTables> {
@@ -23,6 +25,7 @@ export class BookingDb extends Db<BookingDbTables> {
     public get mapObjects() { return this.tables.mapObjects; }
     public get mapObjectViews() { return this.tables.mapObjectViews; }
     public get slots() { return this.tables.slots; }
+    public get clientOrgs() { return this.tables.clientOrgs; }
 }
 
 export const blankBookingDb = new BookingDb(bookingDbTables);

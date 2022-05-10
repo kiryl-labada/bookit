@@ -29,8 +29,6 @@ const createMapObject: Action<{ mapId: number, structure: string }> = ({ mapId, 
         mapObjectId: mapObject.id!,
     };
 
-    console.log('createMapObjectAction', mapObject);
-
     return { mapObjects: [mapObject], mapObjectViews: [mapObjectView] };
 };
 

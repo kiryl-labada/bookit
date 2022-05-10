@@ -6,6 +6,7 @@ import { AppHeader } from './AppHeader'
 import css from './App.module.scss';
 import { CatalogPage } from './pages/catalog/Catalog';
 import { BookingPage } from './pages/booking/Booking';
+import { SettingsPage } from './pages/settings/SettingsPage';
 
 export const App = () => {
     useDbView((db) => db, {});
@@ -17,6 +18,7 @@ export const App = () => {
                 <Route path="/" exact component={MainPage} />
                 <Route path="/booking" component={BookingPage} />
                 <Route path="/catalog" component={CatalogPage} />
+                <Route path="/settings" exact component={SettingsPage} />
             </main>
             {/* <footer></footer> */}
         </div>

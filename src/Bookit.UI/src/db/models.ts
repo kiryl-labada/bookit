@@ -86,6 +86,7 @@ export interface AppContext {
         id: string;
         name: string;
         email: string;
+        clientOrgId: number | null;
     }
 }
 
@@ -102,4 +103,14 @@ export interface Slot {
     mapObjectId: number;
     bookedById: string | null;
     __typename?: 'Slot';
+}
+
+export interface ClientOrg {
+    id: number;
+    name: string;
+    publicApiKey: string;
+    secretApiKey: string;
+    confirmUrl: string;
+    ownerId: string;
+    __typename?: 'ClientOrg';
 }

@@ -3,6 +3,7 @@ using Bookit.Web.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Bookit.Web.Data;
 
@@ -16,6 +17,7 @@ public class BookingContext : IdentityDbContext<UserProfile>
     public DbSet<MapObject> MapObjects { get; set; }
     public DbSet<MapObjectView> MapObjectViews { get; set; }
     public DbSet<Slot> Slots { get; set; }
+    public DbSet<ClientOrg> ClientOrgs { get; set; }
 
     public BookingContext(DbContextOptions<BookingContext> options) : base(options)
     {
@@ -32,6 +34,7 @@ public class BookingContext : IdentityDbContext<UserProfile>
         modelBuilder.ApplyConfiguration(new MapObjectViewEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new UserProfileEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new SlotEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new ClientOrgEntityTypeConfiguration());
     }
 }
 

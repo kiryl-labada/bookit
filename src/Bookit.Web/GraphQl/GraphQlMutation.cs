@@ -14,6 +14,7 @@ public class GraphQlMutation : Mutation<GraphQlContext>
         SubmitField<MapObjectLoader, MapObject>("mapObjects");
         SubmitField<MapObjectViewLoader, MapObjectView>("mapObjectViews");
         SubmitField<SlotLoader, Slot>("slots");
+        SubmitField<ClientOrgLoader, ClientOrg>("clientOrgs");
 
         Field("createMap")
             .PayloadField<CreateMapInput>("input")

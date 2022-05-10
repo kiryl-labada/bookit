@@ -1,6 +1,8 @@
+import { getClientOrg } from './api/queries/getClientOrg';
+import { createClientOrgMutation } from './api/mutations/createClientOrg';
 import { getMapInfoQuery, getSlotsQuery, getMapQuery } from './api/queries';
 import { createMapMutation, publishMutation, bookPlaceMutation } from './api/mutations';
-import { DbRef, flattenResponse, DbPatch, useDbRef, DbSaveResponse } from '@epam/uui-db';
+import { DbRef, flattenResponse, DbPatch, useDbRef, DbSaveResponse, getTempId } from '@epam/uui-db';
 import { DocumentNode } from 'graphql';
 import { print } from 'graphql/language/printer';
 import { FetchResult, QueryOptions } from '@apollo/client';
@@ -9,7 +11,7 @@ import { blankBookingDb, BookingDb, BookingDbTables } from './BookingDb';
 import { svc } from '../services';
 import { getCatalogItems, patchMutation } from './api';
 import { bindActionSet, bookingActions, BookingActions } from './actions';
-import { CatalogItemFilter, Connection, MapObject } from "./models";
+import { CatalogItemFilter, ClientOrg, Connection, MapObject } from "./models";
 
 export interface FetchState {
     isLoading: boolean;
@@ -145,6 +147,16 @@ export class BookingDbRef extends DbRef<BookingDbTables, BookingDb> {
 
     public bookPlace(placeId: number) {
         return this.mutateGQL(bookPlaceMutation, { payload: { placeId } });
+    }
+
+    public createClientOrg() {
+        const name = `${svc.uuiApp.user.name} Org`;
+        const org: Partial<ClientOrg> = { id: getTempId(), name };
+        return this.mutateGQL(createClientOrgMutation, { payload: { clientOrgs: [org] } });
+    }
+
+    public getClientOrg() {
+        return this.fetchGQL(getClientOrg, {});
     }
 }
 

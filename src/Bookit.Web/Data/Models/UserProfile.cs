@@ -15,5 +15,6 @@ namespace Bookit.Web.Data.Models
         public bool IsDeleted { get; set; }
 
         public ICollection<Slot> Slots { get; set; } = new List<Slot>();
+        public ClientOrg? ClientOrg { get; set; }
     }
 }
