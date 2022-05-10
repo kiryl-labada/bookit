@@ -50,14 +50,12 @@ export class MapCanvasController {
         const selectionUpdatedEvent = fromEventPattern((h) => this.canvas.on('selection:updated', h), (h) => this.canvas.off('selection:updated', h));
         
         const s1 = selectionCreatedEvent.subscribe(() => {
-            console.log('selection created');
             const activeView = this.canvas.getActiveObject();
             const state = this.findMapObjectByView(activeView);
             state && this.options.selectedItem?.next(state.current.id);
         });
 
         const s2 = selectionUpdatedEvent.subscribe(() => {
-            console.log('selection updated')
             const activeView = this.canvas.getActiveObject();
             const state = this.findMapObjectByView(activeView);
             if (state && state.current.id !== this.options.selectedItem?.value) {
@@ -71,7 +69,6 @@ export class MapCanvasController {
             if (this.options.selectedItem?.value) {
                 this.options.selectedItem.next(null);
             }
-            console.log('canvas deselect');
         });
 
         const s4 = this.options.selectedItem?.subscribe((id) => {
@@ -142,7 +139,6 @@ export class MapCanvasController {
         this.updateQueue.forEach((item) => this.updateItem(item));
 
         if (this.addQueue.length || this.removeQueue.length || this.updateQueue.length) {
-            console.log('renderAll');
             this.canvas.renderAll();
         }
 
@@ -189,16 +185,8 @@ export class MapCanvasController {
             );
 
             itemModified.subscribe((e) => {
-                console.log('item modified');
                 this.dbRef.actions.updateMapObjectView({ id: item.mapObjectViewId, structure: JSON.stringify(obj) })
             });
-
-            // obj.on('selected' as any, () => {
-            //     if (this.options.selectedItem && this.options.selectedItem.value !== item.id) {
-            //         console.log('selectedItem', item);
-            //         this.options.selectedItem.next(item.id);
-            //     }
-            // });
 
             this.mapState.set(item.id, { current: item, view: obj });
         }, undefined as any);
@@ -273,8 +261,6 @@ interface MapObjectVM {
 }
 
 const getMapObjects = (db: BookingDb, { mapId }: { mapId: number }): MapObjectVM[] => {
-    console.log('mapId', mapId);
-    
     const map = db.mapObjects.byId(mapId);
     const mapObjects = db.mapObjects.find({ mapId }).toArray();
 

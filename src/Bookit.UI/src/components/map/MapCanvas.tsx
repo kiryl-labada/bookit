@@ -23,12 +23,10 @@ export class MapCanvas extends React.Component<MapCanvasGenericProps, A> {
     private subscriptions: Unsubscribable[] = [];
     
     render() {
-        console.log('render');
         return <canvas ref={ (c) => this.setCanvas(c) } />
     }
 
     shouldComponentUpdate(nextProps: MapCanvasGenericProps) {
-        console.log('shouldComponentUpdate')
         this.mapController?.detectChanges();
         this.mapController?.handleQueue();
         this.mapController?.setPlugins(nextProps.plugins);
@@ -37,7 +35,6 @@ export class MapCanvas extends React.Component<MapCanvasGenericProps, A> {
     }
 
     setCanvas(canvas: HTMLCanvasElement | null) {
-        console.log('setCanvas');
         this.htmlCanvas = canvas;
         if (canvas) {
             this.mapController && this.mapController.dispose();
@@ -46,8 +43,6 @@ export class MapCanvas extends React.Component<MapCanvasGenericProps, A> {
     }
 
     componentDidMount() {
-        console.log('componentDidMount');
-
         this.mapController?.detectChanges();
         this.mapController?.handleQueue();
         this.resize();
@@ -60,14 +55,11 @@ export class MapCanvas extends React.Component<MapCanvasGenericProps, A> {
     }
 
     componentWillUnmount() {
-        console.log('componentWillUnmount');
         this.resizeTimer && clearInterval(this.resizeTimer);
         this.subscriptions.forEach((s) => s.unsubscribe());
     }
 
     componentDidUpdate(prevProps: MapCanvasGenericProps, prevState: A, snapshot: any) {
-        console.log('componentDidUpdate');
-
         this.mapController?.detectChanges();
         this.mapController?.handleQueue();
     }

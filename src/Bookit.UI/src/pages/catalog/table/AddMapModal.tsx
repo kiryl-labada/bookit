@@ -18,7 +18,6 @@ export function AddMapModal(modalProps: IModal<any>) {
     const onSave = (input: CreateMapModel) => {
         return dbRef.createMap(input.name!, input.backgroundImage!)
             .then((res) => {
-                console.log('res', res);
                 svc.uuiRouter.redirect({ pathname: '/booking', search: `?id=${res.originalMapId}&tab=${MapPageTab.BUILDER}` });
             });
     };
@@ -74,7 +73,7 @@ export function AddMapModal(modalProps: IModal<any>) {
                             { attachment && (
                                 <FileCard
                                     file={ attachment }
-                                    onClick={ () => { setAttachment(undefined); console.log('clear'); } }
+                                    onClick={ () => setAttachment(undefined) }
                                 />
                             ) }
                         </div>
