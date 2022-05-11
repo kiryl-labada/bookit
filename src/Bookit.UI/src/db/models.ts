@@ -108,9 +108,13 @@ export interface Slot {
 export interface ClientOrg {
     id: number;
     name: string;
+    ownerId: string;
     publicApiKey: string;
     secretApiKey: string;
-    confirmUrl: string;
-    ownerId: string;
+    bookingConfirmUrl: string;
+    userMappingUrl: string;
+    serviceUrl: string;
+    servicePublicApiKey: string;
+    serviceSecretApiKey: string;
     __typename?: 'ClientOrg';
 }

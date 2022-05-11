@@ -16,5 +16,6 @@ namespace Bookit.Web.Data.Models
 
         public ICollection<Slot> Slots { get; set; } = new List<Slot>();
         public ClientOrg? ClientOrg { get; set; }
+        public ICollection<ExternalUser> ExternalUsers { get; set; } = new List<ExternalUser>();
     }
 }

@@ -26,8 +26,20 @@ export const SettingsPage: FC = () => {
                 <LabeledInput label='Secret Api Key' { ...lens.prop('secretApiKey').toProps() }>
                     <TextInput placeholder="Secret Api Key" { ...lens.prop('secretApiKey').toProps() } isReadonly />
                 </LabeledInput>
-                <LabeledInput label='Confirm Url' { ...lens.prop('confirmUrl').toProps() }>
-                    <TextInput placeholder="Confirm Url" { ...lens.prop('confirmUrl').toProps() } />
+                <LabeledInput label='Booking Confirm Url' { ...lens.prop('bookingConfirmUrl').toProps() }>
+                    <TextInput placeholder="Booking Confirm Url" { ...lens.prop('bookingConfirmUrl').toProps() } />
+                </LabeledInput>
+                <LabeledInput label='User Mapping Url' { ...lens.prop('userMappingUrl').toProps() }>
+                    <TextInput placeholder="User Mapping Url" { ...lens.prop('userMappingUrl').toProps() } />
+                </LabeledInput>
+                <LabeledInput label='Service Url' { ...lens.prop('serviceUrl').toProps() }>
+                    <TextInput placeholder="Service Url" { ...lens.prop('serviceUrl').toProps() } />
+                </LabeledInput>
+                <LabeledInput label='Service Public Api Key' { ...lens.prop('servicePublicApiKey').toProps() }>
+                    <TextInput placeholder="Service Public Api Key" { ...lens.prop('servicePublicApiKey').toProps() } />
+                </LabeledInput>
+                <LabeledInput label='Service Secret Api Key' { ...lens.prop('serviceSecretApiKey').toProps() }>
+                    <TextInput placeholder="Service Secret Api Key" { ...lens.prop('bookingConfirmUrl').toProps() } />
                 </LabeledInput>
                 <FlexRow vPadding='24'>
                     <FlexSpacer />
@@ -41,7 +53,7 @@ export const SettingsPage: FC = () => {
 
     return (
         <div style={ { display: 'flex', flex: '1 1 auth', width: '100%', height: 'calc(100% - 60px)', justifyContent: 'center', position: 'absolute' } }>
-            <Panel background='white' style={ { width: 500 } }>
+            <Panel background='white' style={ { width: 750 } }>
                 <ScrollBars>
                     <div style={ { padding: 24 } }>
                         <Form 

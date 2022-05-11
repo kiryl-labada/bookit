@@ -1,6 +1,7 @@
 using Bookit.Web.Data;
 using Bookit.Web.Data.Models;
 using Bookit.Web.GraphQl;
+using Bookit.Web.Middleware;
 using Bookit.Web.Services;
 using Bookit.Web.Services.Implementation;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -8,19 +9,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Bookit.Web;
 
@@ -63,9 +61,6 @@ public class Startup
         services.AddHttpClient();
         services.AddHttpContextAccessor();
 
-        //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-        //    .AddCookie();
-
         Setup(services);
     }
 
@@ -101,52 +96,10 @@ public class Startup
         app.UseAuthentication();
         app.UseAuthorization();
 
-        string[] bypass = { "/", "/api/file/upload", "/auth/ping", "/Account/Login", "/Identity/Account/Login", "/Identity/Account/Logout", "/Identity/Account/Register", "/Identity/Account/RegisterConfirmation" };
-        app.Use(async (context, next) =>
-        {
-            var path = context.Request.Path;
-
-            var c1 = !(context.User?.Identity?.IsAuthenticated == true);
-            var c2 = !bypass.Any(x => path.Equals(x, StringComparison.OrdinalIgnoreCase));
-
-            if (c1 && path.Equals("/auth/login", StringComparison.OrdinalIgnoreCase))
-            {
-                context.Response.Redirect($"/Identity/Account/Login?returnUrl=/auth/login");
-                return;
-            }
-
-            if (c1 && c2)
-            {
-                context.Response.StatusCode = 401;
-                return;
-            }
-
-            await next(context);
-        });
-
-        // ping
-        app.Use(async (context, next) =>
-        {
-            if (context.Request.Path.Equals("/auth/ping", StringComparison.OrdinalIgnoreCase))
-            {
-                return;
-            }
-
-            await next(context);
-        });
-
-        // login
-        app.Use(async (context, next) =>
-        {
-            if (context.Request.Path.Equals("/auth/login", StringComparison.OrdinalIgnoreCase))
-            {
-                context.Response.ContentType = "text/html";
-                await context.Response.WriteAsync("<html><script>window.opener && window.opener.postMessage('authSuccess', '*')</script></html>");
-                return;
-            }
-
-            await next(context);
-        });
+        app.UseMiddleware<AuthMiddleware>();
+        app.UseMiddleware<PingMiddleware>();
+        app.UseMiddleware<LoginMiddleware>();
+        app.UseMiddleware<UserMappingMiddleware>();
 
         app.UseEndpoints(endpoints =>
         {

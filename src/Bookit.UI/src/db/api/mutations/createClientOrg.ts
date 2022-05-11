@@ -11,7 +11,11 @@ export const createClientOrgMutation = gql`
                     publicApiKey
                     secretApiKey
                     ownerId
-                    confirmUrl
+                    bookingConfirmUrl
+                    userMappingUrl
+                    serviceUrl
+                    servicePublicApiKey
+                    serviceSecretApiKey
                 }
             }
         }

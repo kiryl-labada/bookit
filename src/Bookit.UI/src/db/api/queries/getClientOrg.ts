@@ -9,7 +9,11 @@ export const getClientOrg = gql`
                 ownerId
                 publicApiKey
                 secretApiKey
-                confirmUrl
+                bookingConfirmUrl
+                userMappingUrl
+                serviceUrl
+                servicePublicApiKey
+                serviceSecretApiKey
             }
         }
     }

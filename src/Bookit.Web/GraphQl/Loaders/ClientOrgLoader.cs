@@ -28,7 +28,13 @@ public class ClientOrgLoader : MutableLoader<ClientOrg, int, GraphQlContext>
         Field(x => x.OwnerId);
         Field(x => x.PublicApiKey);
         Field(x => x.SecretApiKey);
-        Field(x => x.ConfirmUrl).Editable();
+        
+        Field(x => x.BookingConfirmUrl).Editable();
+        Field(x => x.UserMappingUrl).Editable();
+
+        Field(x => x.ServiceUrl).Editable();
+        Field(x => x.ServicePublicApiKey).Editable();
+        Field(x => x.ServiceSecretApiKey).Editable();
     }
 
     protected override async Task<bool> CanSaveAsync(IExecutionContextAccessor<GraphQlContext> context, ClientOrg entity, bool isNew)

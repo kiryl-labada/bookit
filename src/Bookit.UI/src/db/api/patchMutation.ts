@@ -42,7 +42,11 @@ export const patchMutation = gql`
                 payload {
                     id
                     name
-                    confirmUrl
+                    bookingConfirmUrl
+                    userMappingUrl
+                    serviceUrl
+                    servicePublicApiKey
+                    serviceSecretApiKey
                 }
             }
         }

@@ -18,6 +18,7 @@ public class BookingContext : IdentityDbContext<UserProfile>
     public DbSet<MapObjectView> MapObjectViews { get; set; }
     public DbSet<Slot> Slots { get; set; }
     public DbSet<ClientOrg> ClientOrgs { get; set; }
+    public DbSet<ExternalUser> ExternalUsers { get; set; }
 
     public BookingContext(DbContextOptions<BookingContext> options) : base(options)
     {
@@ -35,6 +36,7 @@ public class BookingContext : IdentityDbContext<UserProfile>
         modelBuilder.ApplyConfiguration(new UserProfileEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new SlotEntityTypeConfiguration());
         modelBuilder.ApplyConfiguration(new ClientOrgEntityTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new ExternalUserEntityTypeConfiguration());
     }
 }
 
