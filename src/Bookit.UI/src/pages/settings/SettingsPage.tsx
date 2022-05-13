@@ -39,7 +39,7 @@ export const SettingsPage: FC = () => {
                     <TextInput placeholder="Service Public Api Key" { ...lens.prop('servicePublicApiKey').toProps() } />
                 </LabeledInput>
                 <LabeledInput label='Service Secret Api Key' { ...lens.prop('serviceSecretApiKey').toProps() }>
-                    <TextInput placeholder="Service Secret Api Key" { ...lens.prop('bookingConfirmUrl').toProps() } />
+                    <TextInput placeholder="Service Secret Api Key" { ...lens.prop('serviceSecretApiKey').toProps() } />
                 </LabeledInput>
                 <FlexRow vPadding='24'>
                     <FlexSpacer />

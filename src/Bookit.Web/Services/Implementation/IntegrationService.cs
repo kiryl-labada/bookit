@@ -47,7 +47,9 @@ public class IntegrationService : IIntegrationService
         }
 
         var response = await _externalRequestService.MakeRequestAsync<UserMappingRequest, UserMappingResponse>(
-            clientOrg, new() 
+            clientOrg.UserMappingUrl,
+            clientOrg, 
+            new() 
             { 
                 UserId = input.ClientUserId, 
                 VerifyCode = input.VerificationCode 
@@ -62,6 +64,12 @@ public class IntegrationService : IIntegrationService
             .AsNoTracking()
             .Where(x => x.PublicApiKey == input.ClientOrgKey)
             .SingleAsync();
+
+        var isExists = await _bookingContext.ExternalUsers.Where(x => x.ClientOrgId == clientOrg.Id && x.UserId == _userContext.Id).AnyAsync();
+        if (isExists)
+        {
+            return;
+        }
 
         var externalUser = new ExternalUser
         {

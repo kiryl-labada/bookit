@@ -5,5 +5,5 @@ namespace Bookit.Web.Services;
 
 public interface IExternalRequestService
 {
-    Task<TResponse?> MakeRequestAsync<TRequest, TResponse>(ClientOrg clientOrg, TRequest data) where TResponse : class;
+    Task<TResponse?> MakeRequestAsync<TRequest, TResponse>(string action, ClientOrg clientOrg, TRequest data) where TResponse : class;
 }

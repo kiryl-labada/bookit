@@ -1,6 +1,8 @@
 ﻿using Bookit.Web.Data.ViewModels;
 using Bookit.Web.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -20,12 +22,12 @@ public class UserMappingMiddleware
         _next = next;
     }
 
-    public async Task Invoke(HttpContext context, IIntegrationService integrationService)
+    public async Task Invoke(HttpContext context, IServiceProvider serviceProvider)
     {
         var query = context.Request.Query;
         var isUserMappingRequest = query.ContainsKey(OrgKey) && query.ContainsKey(OrgUserIdKey) && query.ContainsKey(OrgVerifyCodeKey);
 
-        if (isUserMappingRequest)
+        if (isUserMappingRequest && (context.User?.Identity?.IsAuthenticated ?? false))
         {
             var orgKey = query[OrgKey].Single();
             var orgUserId = query[OrgUserIdKey].Single();
@@ -37,7 +39,8 @@ public class UserMappingMiddleware
                 ClientUserId = orgUserId,
                 VerificationCode = orgVerifyCode,
             };
-            
+
+            var integrationService = serviceProvider.GetRequiredService<IIntegrationService>();
             if (await integrationService.CanExecuteUserMapping(input))
             {
                 await integrationService.ExecuteUserMapping(input);

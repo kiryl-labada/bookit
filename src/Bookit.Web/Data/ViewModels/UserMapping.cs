@@ -8,5 +8,5 @@ public class UserMappingRequest
 
 public class UserMappingResponse
 {
-    public bool? IsAllowed { get; set; } 
+    public bool IsAllowed { get; set; } 
 }
